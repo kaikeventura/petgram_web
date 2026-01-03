@@ -5,7 +5,7 @@ class AuthResponse {
 
   factory AuthResponse.fromMap(Map<String, dynamic> map) {
     return AuthResponse(
-      token: map['token'] ?? '',
+      token: map['accessToken'] ?? '',
     );
   }
 }

@@ -1742,6 +1742,9 @@
               }
             }
           },
+          "201":{
+            "description":"User registered successfully"
+          },
           "400":{
             "description":"Invalid input data (validation error)",
             "content":{
@@ -1751,9 +1754,6 @@
                 }
               }
             }
-          },
-          "201":{
-            "description":"User registered successfully"
           }
         }
       }
@@ -1764,7 +1764,7 @@
           "Authentication"
         ],
         "summary":"Authenticate a user",
-        "description":"Authenticates with email and password, returning a JWT in the Authorization header.",
+        "description":"Authenticates with email and password, returning a JWT in the response body.",
         "operationId":"login",
         "requestBody":{
           "content":{
@@ -1817,15 +1817,22 @@
               }
             }
           },
-          "200":{
-            "description":"Authentication successful, JWT returned in Authorization header"
-          },
           "401":{
             "description":"Invalid credentials",
             "content":{
               "*/*":{
                 "schema":{
                   "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Authentication successful",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/LoginResponse"
                 }
               }
             }
@@ -3314,6 +3321,17 @@
             "example":"password123"
           }
         }
+      },
+      "LoginResponse":{
+        "type":"object",
+        "properties":{
+          "accessToken":{
+            "type":"string",
+            "description":"The JWT access token.",
+            "example":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+          }
+        },
+        "description":"Response body containing the JWT access token."
       },
       "PageMetadata":{
         "type":"object",
