@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:petgram_web/core/network/dio_provider.dart';
 import 'package:petgram_web/features/feed/data/models/post_model.dart';
 
@@ -14,18 +16,45 @@ class PostRepository {
 
   Future<List<Post>> getFeed() async {
     try {
-      // Por enquanto, vamos buscar apenas a primeira página
       final response = await _dio.get('/posts/feed', queryParameters: {'page': 0, 'size': 20});
-      
-      // A resposta é um mapa, não uma lista
       final Map<String, dynamic> responseData = response.data;
-      
-      // Os posts estão dentro da chave 'content'
       final List<dynamic> content = responseData['content'];
-      
       return content.map((json) => Post.fromMap(json)).toList();
     } on DioException catch (e) {
       print('Erro ao buscar o feed: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> createPost({
+    required XFile image,
+    required String caption,
+  }) async {
+    try {
+      final bytes = await image.readAsBytes();
+      final multipartFile = MultipartFile.fromBytes(
+        bytes,
+        filename: image.name,
+      );
+
+      final formData = FormData.fromMap({
+        'file': multipartFile,
+      });
+
+      await _dio.post(
+        '/posts',
+        data: formData,
+        queryParameters: {
+          'caption': caption,
+        },
+        options: Options(
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        ),
+      );
+    } on DioException catch (e) {
+      print('Erro ao criar o post: $e');
       rethrow;
     }
   }

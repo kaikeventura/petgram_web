@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/auth/presentation/screens/login_screen.dart';
+import 'package:petgram_web/features/feed/presentation/screens/create_post_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/feed_screen.dart';
 
 // Provider para o GoRouter para que ele possa ler outros providers
@@ -15,6 +16,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'feed',
             builder: (context, state) => const FeedScreen(),
+            routes: [
+              GoRoute(
+                path: 'create-post',
+                // Usamos um PageBuilder para uma transição de modal
+                pageBuilder: (context, state) => const MaterialPage(
+                  fullscreenDialog: true,
+                  child: CreatePostScreen(),
+                ),
+              ),
+            ]
           ),
         ],
       ),
@@ -40,7 +51,7 @@ class MyApp extends ConsumerWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         scaffoldBackgroundColor: Colors.grey[100], // Um fundo mais suave
-        cardTheme: const CardThemeData( // Correção: CardTheme -> CardThemeData
+        cardTheme: const CardThemeData(
           elevation: 1,
           margin: EdgeInsets.symmetric(vertical: 8.0),
         ),

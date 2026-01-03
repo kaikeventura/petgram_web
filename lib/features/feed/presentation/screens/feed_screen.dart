@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/feed/presentation/providers/feed_provider.dart';
 import 'package:petgram_web/features/feed/presentation/widgets/post_card.dart';
 
@@ -29,16 +30,24 @@ class FeedScreen extends ConsumerWidget {
                   child: Text('Nenhuma publicação encontrada.'),
                 );
               }
-              return ListView.builder(
-                itemCount: posts.length,
-                itemBuilder: (context, index) {
-                  final post = posts[index];
-                  return PostCard(post: post);
-                },
+              // Usando RefreshIndicator para permitir "puxar para atualizar"
+              return RefreshIndicator(
+                onRefresh: () => ref.refresh(feedProvider.future),
+                child: ListView.builder(
+                  itemCount: posts.length,
+                  itemBuilder: (context, index) {
+                    final post = posts[index];
+                    return PostCard(post: post);
+                  },
+                ),
               );
             },
           ),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.go('/feed/create-post'),
+        child: const Icon(Icons.add),
       ),
     );
   }

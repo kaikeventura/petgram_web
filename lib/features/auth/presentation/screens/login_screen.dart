@@ -9,8 +9,8 @@ class LoginScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final emailController = TextEditingController();
-    final passwordController = TextEditingController();
+    final emailController = TextEditingController(text: 'dunha@gmail.com');
+    final passwordController = TextEditingController(text: '123456');
 
     ref.listen<AuthState>(authNotifierProvider, (previous, next) {
       if (next.status == AuthStatus.error) {
