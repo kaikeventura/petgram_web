@@ -1,0 +1,3494 @@
+{
+  "openapi":"3.0.1",
+  "info":{
+    "title":"PetGram API",
+    "description":"A social network for pets.",
+    "version":"v1"
+  },
+  "servers":[
+    {
+      "url":"http://localhost:8080",
+      "description":"Generated server url"
+    }
+  ],
+  "security":[
+    {
+      "bearerAuth":[
+
+      ]
+    }
+  ],
+  "tags":[
+    {
+      "name":"Search",
+      "description":"Endpoints for content discovery."
+    },
+    {
+      "name":"Posts & Interactions",
+      "description":"Endpoints for creating, viewing, and interacting with posts."
+    },
+    {
+      "name":"Notifications",
+      "description":"Endpoints for managing user notifications."
+    },
+    {
+      "name":"Friendships",
+      "description":"Endpoints for managing pet friendships."
+    },
+    {
+      "name":"Authentication",
+      "description":"Endpoints for user registration and login."
+    },
+    {
+      "name":"Users & Profiles",
+      "description":"Endpoints for managing and viewing user profiles and their content."
+    },
+    {
+      "name":"Pets",
+      "description":"Endpoints for managing pet profiles."
+    }
+  ],
+  "paths":{
+    "/users/me":{
+      "get":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Get current user's profile",
+        "description":"Fetches the profile information of the currently authenticated user.",
+        "operationId":"getCurrentUserProfile",
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401":{
+            "description":"Unauthorized",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved user profile",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      },
+      "put":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Update current user's profile",
+        "description":"Updates the name of the currently authenticated user.",
+        "operationId":"updateCurrentUser",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/UserUpdateRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Profile updated successfully",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Validation failed",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      },
+      "delete":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Delete current user's account",
+        "description":"Deletes the account and all associated data of the currently authenticated user. This action is irreversible.",
+        "operationId":"deleteCurrentUser",
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Account deleted successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/users/me/password":{
+      "put":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Update current user's password",
+        "description":"Updates the password of the currently authenticated user. Requires the old password for verification.",
+        "operationId":"updateCurrentUserPassword",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/PasswordUpdateRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Password updated successfully"
+          },
+          "400":{
+            "description":"Incorrect old password or invalid new password",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/pets/{petId}":{
+      "get":{
+        "tags":[
+          "Pets"
+        ],
+        "summary":"Get a pet's public profile",
+        "description":"Fetches the public profile of a pet by its ID.",
+        "operationId":"findPetById",
+        "parameters":[
+          {
+            "name":"petId",
+            "in":"path",
+            "description":"The UUID of the pet to fetch.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Pet not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved pet profile",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PetResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      },
+      "put":{
+        "tags":[
+          "Pets"
+        ],
+        "summary":"Update a pet's profile",
+        "description":"Updates the profile of a pet. The current user must be the owner of the pet.",
+        "operationId":"updatePet",
+        "parameters":[
+          {
+            "name":"petId",
+            "in":"path",
+            "description":"The UUID of the pet to update.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/PetRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Pet not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user is not the owner",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Pet profile updated successfully",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PetResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      },
+      "delete":{
+        "tags":[
+          "Pets"
+        ],
+        "summary":"Delete a pet's profile",
+        "description":"Deletes a pet's profile. The current user must be the owner of the pet.",
+        "operationId":"deletePet",
+        "parameters":[
+          {
+            "name":"petId",
+            "in":"path",
+            "description":"The UUID of the pet to delete.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Pet not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user is not the owner",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Pet profile deleted successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/posts":{
+      "post":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"Create a new post",
+        "description":"Creates a new post with an image, a caption, and optionally tags a list of pets.",
+        "operationId":"createPost",
+        "parameters":[
+          {
+            "name":"caption",
+            "in":"query",
+            "description":"The caption for the post.",
+            "required":true,
+            "schema":{
+              "type":"string"
+            }
+          },
+          {
+            "name":"taggedPetIds",
+            "in":"query",
+            "description":"A list of pet UUIDs to be tagged in the post.",
+            "required":false,
+            "schema":{
+              "type":"array",
+              "items":{
+                "type":"string",
+                "format":"uuid"
+              }
+            }
+          }
+        ],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "required":[
+                  "file"
+                ],
+                "type":"object",
+                "properties":{
+                  "file":{
+                    "type":"string",
+                    "description":"The image file for the post.",
+                    "format":"binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Invalid input, e.g., one of the tagged pets was not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "201":{
+            "description":"Post created successfully",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PostResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/posts/{postId}/like":{
+      "post":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"Like a post",
+        "description":"Adds a 'like' from the current user to a post. Fails if the post is already liked.",
+        "operationId":"likePost",
+        "parameters":[
+          {
+            "name":"postId",
+            "in":"path",
+            "description":"The UUID of the post to like.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Post not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict, user has already liked this post",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Post liked successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      },
+      "delete":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"Unlike a post",
+        "description":"Removes the current user's 'like' from a post.",
+        "operationId":"unlikePost",
+        "parameters":[
+          {
+            "name":"postId",
+            "in":"path",
+            "description":"The UUID of the post to unlike.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict, user has not liked this post",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Post unliked successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/posts/{postId}/comments":{
+      "get":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"List comments for a post",
+        "description":"Fetches a paginated list of comments for a specific post.",
+        "operationId":"getCommentsForPost",
+        "parameters":[
+          {
+            "name":"postId",
+            "in":"path",
+            "description":"The UUID of the post whose comments are to be fetched.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          },
+          {
+            "name":"page",
+            "in":"query",
+            "description":"Zero-based page index (0..N)",
+            "required":false,
+            "schema":{
+              "minimum":0,
+              "type":"integer",
+              "default":0
+            }
+          },
+          {
+            "name":"size",
+            "in":"query",
+            "description":"The size of the page to be returned",
+            "required":false,
+            "schema":{
+              "minimum":1,
+              "type":"integer",
+              "default":20
+            }
+          },
+          {
+            "name":"sort",
+            "in":"query",
+            "description":"Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required":false,
+            "schema":{
+              "type":"array",
+              "items":{
+                "type":"string"
+              }
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Post not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved comments",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PagedModel"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      },
+      "post":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"Add a comment to a post",
+        "description":"Creates a new comment on a specific post.",
+        "operationId":"createComment",
+        "parameters":[
+          {
+            "name":"postId",
+            "in":"path",
+            "description":"The UUID of the post to comment on.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/CommentRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Post not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "201":{
+            "description":"Comment created successfully",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/CommentResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/pets":{
+      "get":{
+        "tags":[
+          "Pets"
+        ],
+        "summary":"List current user's pets",
+        "description":"Fetches a list of all pets owned by the currently authenticated user.",
+        "operationId":"findMyPets",
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"OK",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/components/schemas/PetResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      },
+      "post":{
+        "tags":[
+          "Pets"
+        ],
+        "summary":"Create a new pet profile",
+        "description":"Creates a new pet profile for the currently authenticated user.",
+        "operationId":"createPet",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/PetRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "201":{
+            "description":"Pet profile created successfully",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PetResponse"
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Invalid input data",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/pets/{petId}/avatar":{
+      "post":{
+        "tags":[
+          "Pets"
+        ],
+        "summary":"Upload a pet's avatar",
+        "description":"Uploads a new avatar image for a pet. The current user must be the owner.",
+        "operationId":"uploadPetAvatar",
+        "parameters":[
+          {
+            "name":"petId",
+            "in":"path",
+            "description":"The UUID of the pet whose avatar is being uploaded.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "required":[
+                  "file"
+                ],
+                "type":"object",
+                "properties":{
+                  "file":{
+                    "type":"string",
+                    "description":"The image file to upload.",
+                    "format":"binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses":{
+          "404":{
+            "description":"Pet not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user is not the owner",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Avatar uploaded successfully",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "type":"object",
+                  "additionalProperties":{
+                    "type":"string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/notifications/mark-as-read":{
+      "post":{
+        "tags":[
+          "Notifications"
+        ],
+        "summary":"Mark all notifications as read",
+        "description":"Marks all unread notifications for the current user as read.",
+        "operationId":"markAllAsRead",
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Notifications marked as read"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/friendships/request":{
+      "post":{
+        "tags":[
+          "Friendships"
+        ],
+        "summary":"Send a friend request",
+        "description":"Sends a friend request from one pet to another. The current user must own the requester pet.",
+        "operationId":"sendFriendRequest",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/FriendshipActionRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"One of the pets was not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"A friendship/request already exists",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user does not own the requester pet",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Request sent successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/friendships/remove":{
+      "post":{
+        "tags":[
+          "Friendships"
+        ],
+        "summary":"Remove a friendship",
+        "description":"Removes an 'ACCEPTED' friendship between two pets. The current user must own at least one of the pets.",
+        "operationId":"removeFriendship",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/FriendshipActionRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Friendship not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user does not own one of the pets",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Friendship removed successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/friendships/block":{
+      "post":{
+        "tags":[
+          "Friendships"
+        ],
+        "summary":"Block a user/request",
+        "description":"Changes a 'PENDING' or 'ACCEPTED' friendship status to 'BLOCKED'. The current user must own at least one of the pets.",
+        "operationId":"blockFriendship",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/FriendshipActionRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Friendship not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user does not own one of the pets",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Friendship blocked successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/friendships/accept":{
+      "post":{
+        "tags":[
+          "Friendships"
+        ],
+        "summary":"Accept a friend request",
+        "description":"Accepts a pending friend request. The current user must own the addressee pet.",
+        "operationId":"acceptFriendRequest",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/FriendshipActionRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Friendship request not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"The request is not in a 'PENDING' state",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user does not own the addressee pet",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Request accepted successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/auth/register":{
+      "post":{
+        "tags":[
+          "Authentication"
+        ],
+        "summary":"Register a new user",
+        "description":"Creates a new user account. The email must be unique.",
+        "operationId":"register",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict, email already in use",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400":{
+            "description":"Invalid input data (validation error)",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "201":{
+            "description":"User registered successfully"
+          }
+        }
+      }
+    },
+    "/auth/login":{
+      "post":{
+        "tags":[
+          "Authentication"
+        ],
+        "summary":"Authenticate a user",
+        "description":"Authenticates with email and password, returning a JWT in the Authorization header.",
+        "operationId":"login",
+        "requestBody":{
+          "content":{
+            "application/json":{
+              "schema":{
+                "$ref":"#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required":true
+        },
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Authentication successful, JWT returned in Authorization header"
+          },
+          "401":{
+            "description":"Invalid credentials",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{userId}":{
+      "get":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Get a user's public profile",
+        "description":"Fetches the public profile information of a user by their ID.",
+        "operationId":"getUserProfile",
+        "parameters":[
+          {
+            "name":"userId",
+            "in":"path",
+            "description":"The UUID of the user to fetch.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"User not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved user profile",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/UserProfileResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/users/{userId}/posts":{
+      "get":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Get a user's posts",
+        "description":"Fetches a paginated list of posts created by a specific user.",
+        "operationId":"getUserPosts",
+        "parameters":[
+          {
+            "name":"userId",
+            "in":"path",
+            "description":"The UUID of the user whose posts are to be fetched.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          },
+          {
+            "name":"page",
+            "in":"query",
+            "description":"Zero-based page index (0..N)",
+            "required":false,
+            "schema":{
+              "minimum":0,
+              "type":"integer",
+              "default":0
+            }
+          },
+          {
+            "name":"size",
+            "in":"query",
+            "description":"The size of the page to be returned",
+            "required":false,
+            "schema":{
+              "minimum":1,
+              "type":"integer",
+              "default":20
+            }
+          },
+          {
+            "name":"sort",
+            "in":"query",
+            "description":"Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required":false,
+            "schema":{
+              "type":"array",
+              "items":{
+                "type":"string"
+              }
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"User not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved posts",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PagedModel"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/users/{userId}/pets":{
+      "get":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Get a user's pets",
+        "description":"Fetches a list of pets owned by a specific user.",
+        "operationId":"getPetsByOwner",
+        "parameters":[
+          {
+            "name":"userId",
+            "in":"path",
+            "description":"The UUID of the user whose pets are to be fetched.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"User not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved pets",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/components/schemas/PetResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/users/me/posts":{
+      "get":{
+        "tags":[
+          "Users & Profiles"
+        ],
+        "summary":"Get current user's posts",
+        "description":"Fetches a paginated list of posts created by the currently authenticated user.",
+        "operationId":"getCurrentUserPosts",
+        "parameters":[
+          {
+            "name":"page",
+            "in":"query",
+            "description":"Zero-based page index (0..N)",
+            "required":false,
+            "schema":{
+              "minimum":0,
+              "type":"integer",
+              "default":0
+            }
+          },
+          {
+            "name":"size",
+            "in":"query",
+            "description":"The size of the page to be returned",
+            "required":false,
+            "schema":{
+              "minimum":1,
+              "type":"integer",
+              "default":20
+            }
+          },
+          {
+            "name":"sort",
+            "in":"query",
+            "description":"Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required":false,
+            "schema":{
+              "type":"array",
+              "items":{
+                "type":"string"
+              }
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"OK",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PagedModel"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/search":{
+      "get":{
+        "tags":[
+          "Search"
+        ],
+        "summary":"Search for users and pets",
+        "description":"Performs a simple, case-insensitive search for users and pets by name.",
+        "operationId":"search",
+        "parameters":[
+          {
+            "name":"query",
+            "in":"query",
+            "description":"The search term to look for in user and pet names.",
+            "required":true,
+            "schema":{
+              "type":"string"
+            },
+            "example":"Max"
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"OK",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/SearchResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/posts/{postId}":{
+      "get":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"Get a specific post",
+        "description":"Fetches the details of a single post by its ID.",
+        "operationId":"findPostById",
+        "parameters":[
+          {
+            "name":"postId",
+            "in":"path",
+            "description":"The UUID of the post to fetch.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Post not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved post",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PostResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/posts/{postId}/likes":{
+      "get":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"List users who liked a post",
+        "description":"Fetches a paginated list of users who have liked a specific post.",
+        "operationId":"getLikesForPost",
+        "parameters":[
+          {
+            "name":"postId",
+            "in":"path",
+            "description":"The UUID of the post whose likes are to be fetched.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          },
+          {
+            "name":"page",
+            "in":"query",
+            "description":"Zero-based page index (0..N)",
+            "required":false,
+            "schema":{
+              "minimum":0,
+              "type":"integer",
+              "default":0
+            }
+          },
+          {
+            "name":"size",
+            "in":"query",
+            "description":"The size of the page to be returned",
+            "required":false,
+            "schema":{
+              "minimum":1,
+              "type":"integer",
+              "default":20
+            }
+          },
+          {
+            "name":"sort",
+            "in":"query",
+            "description":"Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required":false,
+            "schema":{
+              "type":"array",
+              "items":{
+                "type":"string"
+              }
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Post not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved list of likes",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PagedModel"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/posts/feed":{
+      "get":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"Get the news feed",
+        "description":"Fetches the paginated news feed for the authenticated user, containing posts from the user and their friends' owners.",
+        "operationId":"getNewsFeed",
+        "parameters":[
+          {
+            "name":"page",
+            "in":"query",
+            "description":"Zero-based page index (0..N)",
+            "required":false,
+            "schema":{
+              "minimum":0,
+              "type":"integer",
+              "default":0
+            }
+          },
+          {
+            "name":"size",
+            "in":"query",
+            "description":"The size of the page to be returned",
+            "required":false,
+            "schema":{
+              "minimum":1,
+              "type":"integer",
+              "default":20
+            }
+          },
+          {
+            "name":"sort",
+            "in":"query",
+            "description":"Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported.",
+            "required":false,
+            "schema":{
+              "type":"array",
+              "items":{
+                "type":"string"
+              }
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"OK",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/PagedModel"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/pets/{petId}/friends":{
+      "get":{
+        "tags":[
+          "Pets"
+        ],
+        "summary":"List a pet's friends",
+        "description":"Fetches a list of all pets that are friends with the specified pet.",
+        "operationId":"listFriends",
+        "parameters":[
+          {
+            "name":"petId",
+            "in":"path",
+            "description":"The UUID of the pet whose friends are to be listed.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Pet not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved friend list",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/components/schemas/PetResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/notifications":{
+      "get":{
+        "tags":[
+          "Notifications"
+        ],
+        "summary":"Get unread notifications",
+        "description":"Fetches a list of all unread notifications for the currently authenticated user.",
+        "operationId":"getUnreadNotifications",
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved notifications",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/components/schemas/NotificationResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/friendships/status":{
+      "get":{
+        "tags":[
+          "Friendships"
+        ],
+        "summary":"Get friendship status",
+        "description":"A utility endpoint to check the friendship status between two pets (e.g., PENDING, ACCEPTED, BLOCKED, or null if no relationship exists).",
+        "operationId":"getFriendshipStatus",
+        "parameters":[
+          {
+            "name":"pet1",
+            "in":"query",
+            "description":"The UUID of the first pet.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          },
+          {
+            "name":"pet2",
+            "in":"query",
+            "description":"The UUID of the second pet.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Not Found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"OK",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/FriendshipStatusResponse"
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/friendships/requests/pending/{petId}":{
+      "get":{
+        "tags":[
+          "Friendships"
+        ],
+        "summary":"Get pending requests for a pet",
+        "description":"Fetches a list of pending friend requests for a specific pet. The current user must own the pet.",
+        "operationId":"getPendingRequests",
+        "parameters":[
+          {
+            "name":"petId",
+            "in":"path",
+            "description":"The UUID of the pet to fetch pending requests for.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Pet not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user does not own the pet",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200":{
+            "description":"Successfully retrieved requests",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "type":"array",
+                  "items":{
+                    "$ref":"#/components/schemas/FriendshipRequestResponse"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    },
+    "/comments/{commentId}":{
+      "delete":{
+        "tags":[
+          "Posts & Interactions"
+        ],
+        "summary":"Delete a comment",
+        "description":"Deletes a comment. The current user must be the author of the comment or the author of the post.",
+        "operationId":"deleteComment",
+        "parameters":[
+          {
+            "name":"commentId",
+            "in":"path",
+            "description":"The UUID of the comment to delete.",
+            "required":true,
+            "schema":{
+              "type":"string",
+              "format":"uuid"
+            }
+          }
+        ],
+        "responses":{
+          "404":{
+            "description":"Comment not found",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409":{
+            "description":"Conflict",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403":{
+            "description":"Forbidden if the user is not authorized to delete the comment",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500":{
+            "description":"Internal Server Error",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "204":{
+            "description":"Comment deleted successfully"
+          }
+        },
+        "security":[
+          {
+            "bearerAuth":[
+
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "components":{
+    "schemas":{
+      "ErrorResponse":{
+        "type":"object",
+        "properties":{
+          "timestamp":{
+            "type":"string",
+            "description":"Timestamp of when the error occurred.",
+            "format":"date-time"
+          },
+          "status":{
+            "type":"integer",
+            "description":"The HTTP status code.",
+            "format":"int32",
+            "example":404
+          },
+          "error":{
+            "type":"string",
+            "description":"A short, human-readable error title.",
+            "example":"Not Found"
+          },
+          "message":{
+            "type":"string",
+            "description":"A detailed error message explaining the cause.",
+            "example":"User not found."
+          },
+          "validationErrors":{
+            "type":"object",
+            "additionalProperties":{
+              "type":"string",
+              "description":"Validation errors, if any.",
+              "nullable":true
+            },
+            "description":"Validation errors, if any.",
+            "nullable":true
+          }
+        },
+        "description":"Standard API error response structure."
+      },
+      "UserUpdateRequest":{
+        "required":[
+          "name"
+        ],
+        "type":"object",
+        "properties":{
+          "name":{
+            "maxLength":50,
+            "minLength":3,
+            "type":"string",
+            "description":"The user's new name.",
+            "example":"John 'Johnny' Doe"
+          }
+        }
+      },
+      "UserProfileResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the user.",
+            "format":"uuid"
+          },
+          "name":{
+            "type":"string",
+            "description":"The user's full name."
+          },
+          "email":{
+            "type":"string",
+            "description":"The user's unique email address."
+          }
+        },
+        "description":"Detailed information about a user's profile."
+      },
+      "PasswordUpdateRequest":{
+        "required":[
+          "newPassword",
+          "oldPassword"
+        ],
+        "type":"object",
+        "properties":{
+          "oldPassword":{
+            "type":"string",
+            "description":"The user's current (old) password.",
+            "example":"password123"
+          },
+          "newPassword":{
+            "maxLength":100,
+            "minLength":6,
+            "type":"string",
+            "description":"The new password. Must be between 6 and 100 characters.",
+            "example":"newStrongPassword456"
+          }
+        }
+      },
+      "PetRequest":{
+        "required":[
+          "birthDate",
+          "breed",
+          "name"
+        ],
+        "type":"object",
+        "properties":{
+          "name":{
+            "type":"string",
+            "description":"Name of the pet.",
+            "example":"Rex"
+          },
+          "breed":{
+            "type":"string",
+            "description":"Breed of the pet.",
+            "example":"Golden Retriever"
+          },
+          "birthDate":{
+            "type":"string",
+            "description":"Pet's birth date. Cannot be in the future.",
+            "format":"date",
+            "example":"2022-01-15"
+          }
+        }
+      },
+      "PetResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the pet.",
+            "format":"uuid"
+          },
+          "name":{
+            "type":"string",
+            "description":"The name of the pet."
+          },
+          "breed":{
+            "type":"string",
+            "description":"The breed of the pet."
+          },
+          "birthDate":{
+            "type":"string",
+            "description":"The pet's birth date.",
+            "format":"date"
+          },
+          "ownerId":{
+            "type":"string",
+            "description":"The unique identifier of the pet's owner.",
+            "format":"uuid"
+          }
+        },
+        "description":"Detailed information about a pet's profile."
+      },
+      "AuthorResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the author.",
+            "format":"uuid"
+          },
+          "name":{
+            "type":"string",
+            "description":"The name of the author."
+          }
+        },
+        "description":"Basic information about an author (user)."
+      },
+      "PostResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the post.",
+            "format":"uuid"
+          },
+          "photoUrl":{
+            "type":"string",
+            "description":"The public URL of the post's photo."
+          },
+          "caption":{
+            "type":"string",
+            "description":"The caption text for the post."
+          },
+          "author":{
+            "$ref":"#/components/schemas/AuthorResponse"
+          },
+          "likeCount":{
+            "type":"integer",
+            "description":"Total number of likes on the post.",
+            "format":"int64"
+          },
+          "commentCount":{
+            "type":"integer",
+            "description":"Total number of comments on the post.",
+            "format":"int64"
+          },
+          "createdAt":{
+            "type":"string",
+            "description":"The timestamp when the post was created.",
+            "format":"date-time"
+          }
+        },
+        "description":"Detailed information about a post."
+      },
+      "CommentRequest":{
+        "required":[
+          "text"
+        ],
+        "type":"object",
+        "properties":{
+          "text":{
+            "maxLength":500,
+            "minLength":0,
+            "type":"string",
+            "description":"The text content of the comment.",
+            "example":"So cute!"
+          }
+        }
+      },
+      "CommentResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the comment.",
+            "format":"uuid"
+          },
+          "text":{
+            "type":"string",
+            "description":"The text content of the comment."
+          },
+          "author":{
+            "$ref":"#/components/schemas/AuthorResponse"
+          },
+          "createdAt":{
+            "type":"string",
+            "description":"The timestamp when the comment was created.",
+            "format":"date-time"
+          }
+        },
+        "description":"Detailed information about a comment."
+      },
+      "FriendshipActionRequest":{
+        "required":[
+          "addresseePetId",
+          "requesterPetId"
+        ],
+        "type":"object",
+        "properties":{
+          "requesterPetId":{
+            "type":"string",
+            "description":"The ID of the pet initiating the action (the requester).",
+            "format":"uuid"
+          },
+          "addresseePetId":{
+            "type":"string",
+            "description":"The ID of the pet receiving the action (the addressee).",
+            "format":"uuid"
+          }
+        },
+        "description":"Request body for actions involving two pets, like sending a friend request or removing a friendship."
+      },
+      "RegisterRequest":{
+        "required":[
+          "email",
+          "name",
+          "password"
+        ],
+        "type":"object",
+        "properties":{
+          "name":{
+            "maxLength":50,
+            "minLength":3,
+            "type":"string",
+            "description":"User's full name.",
+            "example":"John Doe"
+          },
+          "email":{
+            "maxLength":100,
+            "minLength":0,
+            "type":"string",
+            "description":"User's unique email address.",
+            "example":"john.doe@example.com"
+          },
+          "password":{
+            "maxLength":100,
+            "minLength":6,
+            "type":"string",
+            "description":"User's password. Must be between 6 and 100 characters.",
+            "example":"password123"
+          }
+        }
+      },
+      "LoginRequest":{
+        "required":[
+          "email",
+          "password"
+        ],
+        "type":"object",
+        "properties":{
+          "email":{
+            "type":"string",
+            "description":"User's registered email address.",
+            "example":"john.doe@example.com"
+          },
+          "password":{
+            "type":"string",
+            "description":"User's password.",
+            "example":"password123"
+          }
+        }
+      },
+      "PageMetadata":{
+        "type":"object",
+        "properties":{
+          "size":{
+            "type":"integer",
+            "format":"int64"
+          },
+          "number":{
+            "type":"integer",
+            "format":"int64"
+          },
+          "totalElements":{
+            "type":"integer",
+            "format":"int64"
+          },
+          "totalPages":{
+            "type":"integer",
+            "format":"int64"
+          }
+        }
+      },
+      "PagedModel":{
+        "type":"object",
+        "properties":{
+          "content":{
+            "type":"array",
+            "items":{
+              "type":"object"
+            }
+          },
+          "page":{
+            "$ref":"#/components/schemas/PageMetadata"
+          }
+        }
+      },
+      "PetSearchResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the pet.",
+            "format":"uuid"
+          },
+          "name":{
+            "type":"string",
+            "description":"The name of the pet."
+          },
+          "breed":{
+            "type":"string",
+            "description":"The breed of the pet."
+          }
+        },
+        "description":"A summarized pet profile for search results."
+      },
+      "SearchResponse":{
+        "type":"object",
+        "properties":{
+          "users":{
+            "type":"array",
+            "description":"A list of users matching the search query.",
+            "items":{
+              "$ref":"#/components/schemas/UserSearchResponse"
+            }
+          },
+          "pets":{
+            "type":"array",
+            "description":"A list of pets matching the search query.",
+            "items":{
+              "$ref":"#/components/schemas/PetSearchResponse"
+            }
+          }
+        },
+        "description":"A container for search results, separating users and pets."
+      },
+      "UserSearchResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the user.",
+            "format":"uuid"
+          },
+          "name":{
+            "type":"string",
+            "description":"The name of the user."
+          }
+        },
+        "description":"A summarized user profile for search results."
+      },
+      "NotificationResponse":{
+        "type":"object",
+        "properties":{
+          "id":{
+            "type":"string",
+            "description":"The unique identifier of the notification.",
+            "format":"uuid"
+          },
+          "type":{
+            "type":"string",
+            "description":"The type of the notification (e.g., POST_LIKE, FRIENDSHIP_REQUEST).",
+            "enum":[
+              "POST_LIKE",
+              "POST_COMMENT",
+              "FRIENDSHIP_REQUEST",
+              "FRIENDSHIP_ACCEPTED"
+            ]
+          },
+          "message":{
+            "type":"string",
+            "description":"The human-readable message for the notification.",
+            "example":"Rex liked your post."
+          },
+          "link":{
+            "type":"string",
+            "description":"A URL link to the relevant content (e.g., the post that was liked).",
+            "example":"/posts/a1b2c3d4-..."
+          },
+          "isRead":{
+            "type":"boolean",
+            "description":"Indicates if the notification has been read by the user."
+          },
+          "createdAt":{
+            "type":"string",
+            "description":"The timestamp when the notification was created.",
+            "format":"date-time"
+          }
+        },
+        "description":"Represents a notification for the user."
+      },
+      "FriendshipStatusResponse":{
+        "type":"object",
+        "properties":{
+          "status":{
+            "type":"string",
+            "description":"The friendship status. Can be PENDING, ACCEPTED, BLOCKED, or null if no relationship exists.",
+            "nullable":true,
+            "example":"ACCEPTED",
+            "enum":[
+              "PENDING",
+              "ACCEPTED",
+              "BLOCKED"
+            ]
+          }
+        },
+        "description":"The current status of a friendship between two pets."
+      },
+      "FriendshipRequestResponse":{
+        "type":"object",
+        "properties":{
+          "requesterId":{
+            "type":"string",
+            "description":"The ID of the pet that sent the request.",
+            "format":"uuid"
+          },
+          "requesterName":{
+            "type":"string",
+            "description":"The name of the pet that sent the request."
+          },
+          "requestedAt":{
+            "type":"string",
+            "description":"The timestamp when the request was sent.",
+            "format":"date-time"
+          }
+        },
+        "description":"Information about a pending friend request."
+      }
+    },
+    "securitySchemes":{
+      "bearerAuth":{
+        "type":"http",
+        "name":"bearerAuth",
+        "scheme":"bearer",
+        "bearerFormat":"JWT"
+      }
+    }
+  }
+}
