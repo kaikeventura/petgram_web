@@ -178,6 +178,24 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
                     ],
                   ),
                 ),
+                const SizedBox(height: 8),
+                if (widget.post.commentCount > 0)
+                  GestureDetector(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) => FractionallySizedBox(
+                          heightFactor: 0.7,
+                          child: CommentsSheet(postId: widget.post.id),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      'Ver todos os ${widget.post.commentCount} comentários',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ),
                 const SizedBox(height: 16),
               ],
             ),
