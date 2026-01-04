@@ -5,6 +5,8 @@ enum FriendshipStatusValue {
   following, // Eu sigo ele (e ele não me segue).
   followedBy, // Ele me segue, mas eu não o sigo.
   mutual, // Ambos se seguem.
+  pendingFollowBack, // Eu cliquei em "seguir de volta" e a solicitação está pendente.
+  acceptFollowBack, // Eu estou seguindo alguém e essa pessoa me enviou uma solicitação de volta.
   isMe, // É o meu próprio perfil
 }
 

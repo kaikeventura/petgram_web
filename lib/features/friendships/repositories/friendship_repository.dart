@@ -33,8 +33,6 @@ class FriendshipRepository {
       case 'PENDING_SENT':
         return FriendshipState(FriendshipStatusValue.pendingSent);
       case 'PENDING_RECEIVED':
-        // O ID do requisitante é o `targetPetId` do perfil que estamos vendo.
-        // O botão usará essa informação diretamente do seu contexto.
         return FriendshipState(FriendshipStatusValue.pendingReceived, pendingRequesterId: targetPetId);
       case 'FOLLOWING':
         return FriendshipState(FriendshipStatusValue.following);
@@ -42,6 +40,10 @@ class FriendshipRepository {
         return FriendshipState(FriendshipStatusValue.followedBy);
       case 'MUTUAL':
         return FriendshipState(FriendshipStatusValue.mutual);
+      case 'PENDING_FOLLOW_BACK':
+        return FriendshipState(FriendshipStatusValue.pendingFollowBack);
+      case 'ACCEPT_FOLLOW_BACK': // <-- NOVO MAPEAMENTO
+        return FriendshipState(FriendshipStatusValue.acceptFollowBack, pendingRequesterId: targetPetId);
       default:
         return FriendshipState(FriendshipStatusValue.none);
     }

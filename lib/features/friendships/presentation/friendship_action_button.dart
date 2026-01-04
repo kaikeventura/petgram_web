@@ -32,13 +32,14 @@ class FriendshipActionButton extends ConsumerWidget {
             );
 
           case FriendshipStatusValue.pendingSent:
+          case FriendshipStatusValue.pendingFollowBack:
             return OutlinedButton(onPressed: null, child: const Text('Solicitado'));
 
           case FriendshipStatusValue.pendingReceived:
+          case FriendshipStatusValue.acceptFollowBack: // <-- NOVO CASO
             return ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               onPressed: () async {
-                // CORREÇÃO: O requisitante é o pet do perfil que estamos vendo (targetPetId)
                 await ref.read(friendshipRepositoryProvider).acceptFriendRequest(myPetId: myPetId!, requesterPetId: targetPetId);
                 ref.invalidate(friendshipStatusProvider(targetPetId));
               },
@@ -51,14 +52,13 @@ class FriendshipActionButton extends ConsumerWidget {
               onPressed: () {
                 // Lógica para modal de "Deixar de Seguir"
               },
-              child: const Text('A Seguir'),
+              child: const Text('Seguindo'),
             );
 
           case FriendshipStatusValue.followedBy:
             return ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               onPressed: () async {
-                // A ação é a mesma de seguir: enviar uma solicitação
                 await ref.read(friendshipRepositoryProvider).sendFriendRequest(myPetId: myPetId!, targetPetId: targetPetId);
                 ref.invalidate(friendshipStatusProvider(targetPetId));
               },
