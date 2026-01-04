@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petgram_web/features/pet/models/pet_model.dart';
 import 'package:petgram_web/features/pet/models/post_profile_model.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
+import 'package:petgram_web/features/pet/providers/pet_list_provider.dart';
 import 'package:petgram_web/features/pet/providers/profile_providers.dart';
 
 class PetProfileScreen extends ConsumerWidget {
@@ -15,7 +16,7 @@ class PetProfileScreen extends ConsumerWidget {
     if (currentPet == null) {
       return const Scaffold(
         body: Center(
-          child: Text('Nenhum pet selecionado.'),
+          child: Text('Nenhum pet selecionado. Recarregue o app.'),
         ),
       );
     }
@@ -24,6 +25,22 @@ class PetProfileScreen extends ConsumerWidget {
     final petPosts = ref.watch(petPostsProvider(currentPet.id));
 
     return Scaffold(
+      appBar: AppBar(
+        title: InkWell(
+          onTap: () => _showPetSelector(context, ref),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(currentPet.name, style: const TextStyle(fontWeight: FontWeight.bold)),
+              const Icon(Icons.arrow_drop_down),
+            ],
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           ref.invalidate(petProfileProvider(currentPet.id));
@@ -46,6 +63,37 @@ class PetProfileScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void _showPetSelector(BuildContext context, WidgetRef ref) {
+    final myPets = ref.watch(myPetsProvider);
+
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return myPets.when(
+          data: (pets) => ListView.builder(
+            itemCount: pets.length,
+            itemBuilder: (context, index) {
+              final pet = pets[index];
+              return ListTile(
+                leading: CircleAvatar(
+                  backgroundImage: pet.avatarUrl != null ? NetworkImage(pet.avatarUrl!) : null,
+                  child: pet.avatarUrl == null ? Text(pet.name[0].toUpperCase()) : null,
+                ),
+                title: Text(pet.name),
+                onTap: () {
+                  ref.read(petContextProvider.notifier).selectPet(pet);
+                  Navigator.of(context).pop();
+                },
+              );
+            },
+          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, st) => Center(child: Text('Erro ao carregar lista de pets: $e')),
+        );
+      },
     );
   }
 }
@@ -74,23 +122,18 @@ class _ProfileHeader extends StatelessWidget {
                   ),
                   const SizedBox(width: 20),
                   Expanded(
-                    child: Column(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            _StatItem(count: postsCount?.toString() ?? '-', label: 'Posts'),
-                            _StatItem(count: '128', label: 'Amigos'),
-                            _StatItem(count: '256', label: 'Seguindo'),
-                          ],
-                        ),
+                        _StatItem(count: postsCount?.toString() ?? '-', label: 'Posts'),
+                        _StatItem(count: '128', label: 'Amigos'), // Mocked
+                        _StatItem(count: '256', label: 'Seguindo'), // Mocked
                       ],
                     ),
                   ),
                 ],
               ),
               const SizedBox(height: 12),
-              Text(pet.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
               Text(pet.breed, style: const TextStyle(color: Colors.grey)),
               const SizedBox(height: 16),
               SizedBox(
