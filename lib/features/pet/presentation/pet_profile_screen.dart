@@ -88,31 +88,34 @@ class PetProfileScreen extends ConsumerWidget {
   }
 
   void _showPetSelector(BuildContext context, WidgetRef ref) {
-    final myPets = ref.watch(myPetsProvider);
-
     showModalBottomSheet(
       context: context,
-      builder: (context) {
-        return myPets.when(
-          data: (pets) => ListView.builder(
-            itemCount: pets.length,
-            itemBuilder: (context, index) {
-              final pet = pets[index];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: pet.avatarUrl != null ? NetworkImage(pet.avatarUrl!) : null,
-                  child: pet.avatarUrl == null ? Text(pet.name[0].toUpperCase()) : null,
-                ),
-                title: Text(pet.name),
-                onTap: () {
-                  ref.read(petContextProvider.notifier).selectPet(pet);
-                  Navigator.of(context).pop();
+      builder: (modalContext) {
+        return Consumer(
+          builder: (context, ref, child) {
+            final myPets = ref.watch(myPetsProvider);
+            return myPets.when(
+              data: (pets) => ListView.builder(
+                itemCount: pets.length,
+                itemBuilder: (context, index) {
+                  final pet = pets[index];
+                  return ListTile(
+                    leading: CircleAvatar(
+                      backgroundImage: pet.avatarUrl != null ? NetworkImage(pet.avatarUrl!) : null,
+                      child: pet.avatarUrl == null ? Text(pet.name[0].toUpperCase()) : null,
+                    ),
+                    title: Text(pet.name),
+                    onTap: () {
+                      ref.read(petContextProvider.notifier).selectPet(pet);
+                      Navigator.of(modalContext).pop();
+                    },
+                  );
                 },
-              );
-            },
-          ),
-          loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, st) => Center(child: Text('Erro ao carregar lista de pets: $e')),
+              ),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, st) => Center(child: Text('Erro ao carregar lista de pets: $e')),
+            );
+          },
         );
       },
     );
