@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petgram_web/core/storage/storage_provider.dart';
+import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
 
 final dioProvider = Provider<Dio>((ref) {
   final dio = Dio(
@@ -10,20 +11,27 @@ final dioProvider = Provider<Dio>((ref) {
     ),
   );
 
-  final secureStorage = ref.watch(secureStorageProvider);
-
   dio.interceptors.add(
     InterceptorsWrapper(
       onRequest: (options, handler) async {
-        // Não adiciona o token em rotas de autenticação
-        if (options.path == '/auth/login' || options.path == '/auth/register') {
+        // Rotas que não precisam de token ou petId
+        final publicRoutes = ['/auth/login', '/auth/register'];
+        if (publicRoutes.contains(options.path)) {
           return handler.next(options);
         }
 
-        final token = await secureStorage.read(key: 'auth_token');
+        // Adicionar Token de Autenticação
+        final token = await ref.read(secureStorageProvider).read(key: 'auth_token');
         if (token != null) {
           options.headers['Authorization'] = 'Bearer $token';
         }
+
+        // Adicionar ID do Pet ao Header quando disponível
+        final currentPet = ref.read(petContextProvider);
+        if (currentPet != null) {
+          options.headers['X-Pet-Id'] = currentPet.id;
+        }
+
         return handler.next(options);
       },
     ),

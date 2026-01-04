@@ -15,7 +15,7 @@ class PetRepository {
 
   Future<List<PetModel>> getMyPets() async {
     try {
-      final response = await _dio.get('/pets');
+      final response = await _dio.get('/pets/my-pets');
       final List<dynamic> data = response.data;
       return data.map((json) => PetModel.fromJson(json)).toList();
     } catch (e) {
