@@ -23,6 +23,15 @@ class PetRepository {
     }
   }
 
+  Future<PetModel> getPetDetails(String petId) async {
+    try {
+      final response = await _dio.get('/pets/$petId');
+      return PetModel.fromJson(response.data);
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   Future<PetModel> createPet({
     required String name,
     required String breed,

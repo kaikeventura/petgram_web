@@ -6,7 +6,9 @@ import 'package:petgram_web/features/auth/presentation/notifiers/auth_state.dart
 import 'package:petgram_web/features/auth/presentation/screens/login_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/create_post_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/feed_screen.dart';
+import 'package:petgram_web/features/main/presentation/main_screen.dart';
 import 'package:petgram_web/features/pet/presentation/create_pet_screen.dart';
+import 'package:petgram_web/features/pet/presentation/pet_profile_screen.dart';
 import 'package:petgram_web/features/pet/presentation/pet_selection_screen.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
 
@@ -21,12 +23,16 @@ class RouterNotifier extends ChangeNotifier {
 
 final routerNotifierProvider = Provider((ref) => RouterNotifier(ref));
 
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
+final _shellNavigatorKey = GlobalKey<NavigatorState>();
+
 final routerProvider = Provider<GoRouter>((ref) {
   final notifier = ref.watch(routerNotifierProvider);
 
   return GoRouter(
+    navigatorKey: _rootNavigatorKey,
     refreshListenable: notifier,
-    initialLocation: '/login',
+    initialLocation: '/feed',
     redirect: (context, state) {
       final authState = ref.read(authNotifierProvider);
       final currentPet = ref.read(petContextProvider);
@@ -45,11 +51,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       }
       
       if (isLoggedIn && currentPet == null) {
-          if (isCreatingPet) return null;
+          if (isCreatingPet || isSelectingPet) return null;
           return '/select-pet';
       }
       
-      if (isLoggedIn && currentPet != null && isSelectingPet) {
+      if (isLoggedIn && currentPet != null && (isSelectingPet || isLoggingIn)) {
           return '/feed';
       }
 
@@ -68,16 +74,29 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '/create-pet',
         builder: (context, state) => const CreatePetScreen(),
       ),
-      GoRoute(
-        path: '/feed',
-        builder: (context, state) => const FeedScreen(),
+      ShellRoute(
+        navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return MainScreen(child: child);
+        },
         routes: [
           GoRoute(
-            path: 'create-post',
-            pageBuilder: (context, state) => const MaterialPage(
-              fullscreenDialog: true,
-              child: CreatePostScreen(),
-            ),
+            path: '/feed',
+            builder: (context, state) => const FeedScreen(),
+            routes: [
+              GoRoute(
+                parentNavigatorKey: _rootNavigatorKey,
+                path: 'create-post',
+                pageBuilder: (context, state) => const MaterialPage(
+                  fullscreenDialog: true,
+                  child: CreatePostScreen(),
+                ),
+              ),
+            ]
+          ),
+          GoRoute(
+            path: '/profile',
+            builder: (context, state) => const PetProfileScreen(),
           ),
         ],
       ),

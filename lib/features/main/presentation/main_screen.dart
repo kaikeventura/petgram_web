@@ -1,0 +1,51 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:petgram_web/features/feed/presentation/providers/feed_provider.dart';
+import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
+import 'package:petgram_web/features/pet/providers/profile_providers.dart';
+
+class MainScreen extends ConsumerWidget {
+  final Widget child;
+  const MainScreen({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Scaffold(
+      body: child,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _calculateSelectedIndex(context),
+        onTap: (index) => _onItemTapped(index, context, ref),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Feed'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
+        ],
+      ),
+    );
+  }
+
+  int _calculateSelectedIndex(BuildContext context) {
+    final String location = GoRouterState.of(context).uri.toString();
+    if (location.startsWith('/profile')) {
+      return 1;
+    }
+    return 0;
+  }
+
+  void _onItemTapped(int index, BuildContext context, WidgetRef ref) {
+    switch (index) {
+      case 0:
+        ref.invalidate(feedProvider);
+        context.go('/feed');
+        break;
+      case 1:
+        final currentPet = ref.read(petContextProvider);
+        if (currentPet != null) {
+          ref.invalidate(petProfileProvider(currentPet.id));
+          ref.invalidate(petPostsProvider(currentPet.id));
+        }
+        context.go('/profile');
+        break;
+    }
+  }
+}
