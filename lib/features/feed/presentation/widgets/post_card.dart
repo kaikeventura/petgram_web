@@ -128,8 +128,8 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
                   scale: _scaleAnimation,
                   child: IconButton(
                     icon: Icon(
-                      _isLiked ? Icons.favorite : Icons.favorite_border,
-                      color: _isLiked ? Colors.red : null,
+                      Icons.pets,
+                      color: _isLiked ? Colors.red : Colors.grey,
                     ),
                     onPressed: _onLikePressed,
                   ),
