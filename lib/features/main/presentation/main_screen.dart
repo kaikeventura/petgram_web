@@ -18,6 +18,7 @@ class MainScreen extends ConsumerWidget {
         onTap: (index) => _onItemTapped(index, context, ref),
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Feed'),
+          BottomNavigationBarItem(icon: Icon(Icons.search), label: 'Busca'),
           BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Perfil'),
         ],
       ),
@@ -26,8 +27,11 @@ class MainScreen extends ConsumerWidget {
 
   int _calculateSelectedIndex(BuildContext context) {
     final String location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith('/profile')) {
+    if (location.startsWith('/search')) {
       return 1;
+    }
+    if (location.startsWith('/profile')) {
+      return 2;
     }
     return 0;
   }
@@ -39,6 +43,9 @@ class MainScreen extends ConsumerWidget {
         context.go('/feed');
         break;
       case 1:
+        context.go('/search');
+        break;
+      case 2:
         final currentPet = ref.read(petContextProvider);
         if (currentPet != null) {
           ref.invalidate(petProfileProvider(currentPet.id));

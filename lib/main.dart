@@ -11,6 +11,7 @@ import 'package:petgram_web/features/pet/presentation/create_pet_screen.dart';
 import 'package:petgram_web/features/pet/presentation/pet_profile_screen.dart';
 import 'package:petgram_web/features/pet/presentation/pet_selection_screen.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
+import 'package:petgram_web/features/search/presentation/search_screen.dart';
 
 class RouterNotifier extends ChangeNotifier {
   final Ref _ref;
@@ -93,6 +94,10 @@ final routerProvider = Provider<GoRouter>((ref) {
                 ),
               ),
             ]
+          ),
+          GoRoute(
+            path: '/search',
+            builder: (context, state) => const SearchScreen(),
           ),
           GoRoute(
             path: '/profile',
