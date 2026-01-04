@@ -7,6 +7,7 @@ import 'package:petgram_web/features/auth/presentation/screens/login_screen.dart
 import 'package:petgram_web/features/feed/presentation/screens/create_post_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/feed_screen.dart';
 import 'package:petgram_web/features/main/presentation/main_screen.dart';
+import 'package:petgram_web/features/notifications/presentation/notifications_screen.dart';
 import 'package:petgram_web/features/pet/presentation/create_pet_screen.dart';
 import 'package:petgram_web/features/pet/presentation/pet_profile_screen.dart';
 import 'package:petgram_web/features/pet/presentation/pet_selection_screen.dart';
@@ -108,6 +109,10 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const SearchScreen(),
           ),
           GoRoute(
+            path: '/notifications',
+            builder: (context, state) => const NotificationsScreen(),
+          ),
+          GoRoute(
             path: '/profile',
             builder: (context, state) => const PetProfileScreen(),
           ),
@@ -137,6 +142,13 @@ class MyApp extends ConsumerWidget {
         cardTheme: const CardThemeData(
           elevation: 1,
           margin: EdgeInsets.symmetric(vertical: 8.0),
+        ),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          backgroundColor: Colors.white,
+          selectedItemColor: Colors.blue,
+          unselectedItemColor: Colors.grey[600],
+          showUnselectedLabels: true,
+          type: BottomNavigationBarType.fixed,
         ),
       ),
       routerConfig: router,
