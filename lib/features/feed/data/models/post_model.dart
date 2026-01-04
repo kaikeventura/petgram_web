@@ -4,6 +4,7 @@ class Post {
   final String caption;
   final String authorId;
   final String authorName;
+  final String? authorAvatarUrl;
   final int likeCount;
   final int commentCount;
   final DateTime createdAt;
@@ -15,6 +16,7 @@ class Post {
     required this.caption,
     required this.authorId,
     required this.authorName,
+    this.authorAvatarUrl,
     required this.likeCount,
     required this.commentCount,
     required this.createdAt,
@@ -30,6 +32,7 @@ class Post {
       caption: map['caption'] ?? '',
       authorId: authorMap['id'] ?? '',
       authorName: authorMap['name'] ?? 'Usuário Anônimo',
+      authorAvatarUrl: authorMap['avatarUrl'],
       likeCount: map['likeCount'] ?? 0,
       commentCount: map['commentCount'] ?? 0,
       createdAt: DateTime.tryParse(map['createdAt'] ?? '') ?? DateTime.now(),

@@ -93,10 +93,14 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
             padding: const EdgeInsets.all(12.0),
             child: Row(
               children: [
-                const CircleAvatar(
-                  backgroundColor: Colors.grey,
+                CircleAvatar(
                   radius: 20,
-                  child: Icon(Icons.person, color: Colors.white),
+                  backgroundImage: widget.post.authorAvatarUrl != null
+                      ? NetworkImage(widget.post.authorAvatarUrl!)
+                      : null,
+                  child: widget.post.authorAvatarUrl == null
+                      ? const Icon(Icons.pets, color: Colors.white, size: 20)
+                      : null,
                 ),
                 const SizedBox(width: 12),
                 Text(
