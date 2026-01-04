@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:petgram_web/features/account/presentation/account_settings_screen.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_notifier.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_state.dart';
 import 'package:petgram_web/features/auth/presentation/screens/login_screen.dart';
@@ -92,6 +93,10 @@ final routerProvider = Provider<GoRouter>((ref) {
           final petId = state.pathParameters['petId']!;
           return PublicPetProfileScreen(petId: petId);
         },
+      ),
+      GoRoute(
+        path: '/settings',
+        builder: (context, state) => const AccountSettingsScreen(),
       ),
       ShellRoute(
         navigatorKey: _shellNavigatorKey,
