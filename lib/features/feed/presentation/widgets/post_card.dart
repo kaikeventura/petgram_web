@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petgram_web/features/comments/presentation/comments_sheet.dart';
 import 'package:petgram_web/features/feed/data/models/post_model.dart';
 import 'package:petgram_web/features/post/repositories/post_repository.dart';
 
@@ -140,7 +141,16 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
                 ),
                 IconButton(
                   icon: const Icon(Icons.comment_outlined),
-                  onPressed: () { /* TODO */ },
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      builder: (context) => FractionallySizedBox(
+                        heightFactor: 0.7,
+                        child: CommentsSheet(postId: widget.post.id),
+                      ),
+                    );
+                  },
                 ),
                 const Spacer(),
               ],
