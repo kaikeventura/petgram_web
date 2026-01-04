@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petgram_web/core/storage/storage_provider.dart';
 import 'package:petgram_web/features/auth/data/models/user_login_request.dart';
 import 'package:petgram_web/features/auth/data/repositories/auth_repository.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_state.dart';
@@ -11,7 +12,23 @@ final authNotifierProvider =
 class AuthNotifier extends StateNotifier<AuthState> {
   final Ref _ref;
 
-  AuthNotifier(this._ref) : super(AuthState(status: AuthStatus.initial));
+  AuthNotifier(this._ref) : super(AuthState(status: AuthStatus.initial)) {
+    checkAuthStatus();
+  }
+
+  Future<void> checkAuthStatus() async {
+    state = state.copyWith(status: AuthStatus.loading);
+    try {
+      final token = await _ref.read(secureStorageProvider).read(key: 'auth_token');
+      if (token != null && token.isNotEmpty) {
+        state = state.copyWith(status: AuthStatus.authenticated);
+      } else {
+        state = state.copyWith(status: AuthStatus.unauthenticated);
+      }
+    } catch (e) {
+      state = state.copyWith(status: AuthStatus.unauthenticated);
+    }
+  }
 
   Future<void> login(String email, String password) async {
     try {

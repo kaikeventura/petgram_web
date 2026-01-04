@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petgram_web/features/auth/presentation/notifiers/auth_notifier.dart';
 import 'package:petgram_web/features/friendships/presentation/friendship_action_button.dart';
 import 'package:petgram_web/features/pet/presentation/widgets/profile_widgets.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
@@ -40,6 +41,15 @@ class PetProfileScreen extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Theme.of(context).textTheme.bodyLarge?.color,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              ref.read(petContextProvider.notifier).clearPet();
+              await ref.read(authNotifierProvider.notifier).logout();
+            },
+          ),
+        ],
       ),
       body: RefreshIndicator(
         onRefresh: () async {

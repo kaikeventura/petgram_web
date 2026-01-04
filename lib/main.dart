@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_notifier.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_state.dart';
 import 'package:petgram_web/features/auth/presentation/screens/login_screen.dart';
+import 'package:petgram_web/features/auth/presentation/screens/splash_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/create_post_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/feed_screen.dart';
 import 'package:petgram_web/features/main/presentation/main_screen.dart';
@@ -35,36 +36,44 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
     refreshListenable: notifier,
-    initialLocation: '/feed',
+    initialLocation: '/',
     redirect: (context, state) {
       final authState = ref.read(authNotifierProvider);
       final currentPet = ref.read(petContextProvider);
-      
-      final isLoggedIn = authState.status == AuthStatus.authenticated;
-      final isLoggingIn = state.uri.toString() == '/login';
-      final isSelectingPet = state.uri.toString() == '/select-pet';
-      final isCreatingPet = state.uri.toString() == '/create-pet';
 
-      if (!isLoggedIn) {
-        return '/login';
+      final isAuthLoading = authState.status == AuthStatus.loading || authState.status == AuthStatus.initial;
+      final isLoggedIn = authState.status == AuthStatus.authenticated;
+      
+      final isGoingToSplash = state.uri.toString() == '/';
+      final isGoingToLogin = state.uri.toString() == '/login';
+
+      if (isAuthLoading) {
+        return isGoingToSplash ? null : '/';
       }
 
-      if (isLoggedIn && isLoggingIn) {
+      if (!isLoggedIn) {
+        return isGoingToLogin ? null : '/login';
+      }
+
+      if (isLoggedIn && (isGoingToLogin || isGoingToSplash)) {
         return currentPet == null ? '/select-pet' : '/feed';
       }
       
       if (isLoggedIn && currentPet == null) {
-          if (isCreatingPet || isSelectingPet) return null;
-          return '/select-pet';
-      }
-      
-      if (isLoggedIn && currentPet != null && (isSelectingPet || isLoggingIn)) {
-          return '/feed';
+        final allowedRoutes = ['/select-pet', '/create-pet'];
+        if (allowedRoutes.contains(state.uri.toString())) {
+          return null;
+        }
+        return '/select-pet';
       }
 
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/',
+        builder: (context, state) => const SplashScreen(),
+      ),
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
