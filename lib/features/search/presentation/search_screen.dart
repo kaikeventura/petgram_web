@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:petgram_web/features/search/models/search_result_model.dart';
 import 'package:petgram_web/features/search/providers/search_providers.dart';
 
 class SearchScreen extends ConsumerWidget {
@@ -60,11 +61,7 @@ class SearchScreen extends ConsumerWidget {
                       title: Text(result.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(result.subtitle ?? ''),
                       onTap: () {
-                        // Ação de clique para o perfil do pet
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Navegando para o pet ${result.name}')),
-                        );
-                        // context.push('/profile/${result.id}');
+                        context.push('/pets/${result.id}');
                       },
                     );
                   },
