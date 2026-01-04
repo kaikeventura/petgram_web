@@ -4,11 +4,10 @@ class Post {
   final String caption;
   final String authorId;
   final String authorName;
-  // O authorPhotoUrl não vem no PostResponse, teremos que buscar separadamente no futuro.
-  // Por enquanto, vamos usar um placeholder.
   final int likeCount;
   final int commentCount;
   final DateTime createdAt;
+  final bool isLiked;
 
   Post({
     required this.id,
@@ -19,10 +18,10 @@ class Post {
     required this.likeCount,
     required this.commentCount,
     required this.createdAt,
+    required this.isLiked,
   });
 
   factory Post.fromMap(Map<String, dynamic> map) {
-    // O autor está aninhado
     final authorMap = map['author'] as Map<String, dynamic>? ?? {};
 
     return Post(
@@ -34,6 +33,7 @@ class Post {
       likeCount: map['likeCount'] ?? 0,
       commentCount: map['commentCount'] ?? 0,
       createdAt: DateTime.tryParse(map['createdAt'] ?? '') ?? DateTime.now(),
+      isLiked: map['isLiked'] ?? false,
     );
   }
 }

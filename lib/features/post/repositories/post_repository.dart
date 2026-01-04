@@ -22,4 +22,20 @@ class PostRepository {
       rethrow;
     }
   }
+
+  Future<void> likePost(String postId) async {
+    try {
+      await _dio.post('/posts/$postId/like');
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<void> unlikePost(String postId) async {
+    try {
+      await _dio.delete('/posts/$postId/like');
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
