@@ -5,6 +5,8 @@ class PetModel {
   final String birthDate;
   final String? avatarUrl;
   final String ownerId;
+  final int followerCount;
+  final int followingCount;
 
   PetModel({
     required this.id,
@@ -13,6 +15,8 @@ class PetModel {
     required this.birthDate,
     this.avatarUrl,
     required this.ownerId,
+    this.followerCount = 0,
+    this.followingCount = 0,
   });
 
   factory PetModel.fromJson(Map<String, dynamic> json) {
@@ -23,6 +27,8 @@ class PetModel {
       birthDate: json['birthDate'] as String,
       avatarUrl: json['avatarUrl'] as String?,
       ownerId: json['ownerId'] as String,
+      followerCount: json['followerCount'] ?? 0,
+      followingCount: json['followingCount'] ?? 0,
     );
   }
 
@@ -34,6 +40,8 @@ class PetModel {
       'birthDate': birthDate,
       'avatarUrl': avatarUrl,
       'ownerId': ownerId,
+      'followerCount': followerCount,
+      'followingCount': followingCount,
     };
   }
 }

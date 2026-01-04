@@ -218,8 +218,8 @@ class _ProfileHeaderState extends ConsumerState<_ProfileHeader> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         _StatItem(count: widget.postsCount?.toString() ?? '-', label: 'Posts'),
-                        _StatItem(count: '128', label: 'Amigos'), // Mocked
-                        _StatItem(count: '256', label: 'Seguindo'), // Mocked
+                        _StatItem(count: widget.pet.followerCount.toString(), label: 'Amigos'),
+                        _StatItem(count: widget.pet.followingCount.toString(), label: 'Seguindo'),
                       ],
                     ),
                   ),

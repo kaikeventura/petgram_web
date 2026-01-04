@@ -1654,9 +1654,6 @@
               }
             }
           },
-          "201": {
-            "description": "User registered successfully"
-          },
           "400": {
             "description": "Invalid input data (validation error)",
             "content": {
@@ -1666,6 +1663,9 @@
                 }
               }
             }
+          },
+          "201": {
+            "description": "User registered successfully"
           }
         }
       }
@@ -2254,6 +2254,160 @@
         }
       }
     },
+    "/pets/{petId}/following": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Get a pet's following",
+        "description": "Fetches a list of pets that the given pet follows.",
+        "operationId": "getFollowing",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "The UUID of the pet whose following are to be fetched.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Pet not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successfully retrieved following",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PetResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets/{petId}/followers": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Get a pet's followers",
+        "description": "Fetches a list of pets that follow the given pet.",
+        "operationId": "getFollowers",
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "description": "The UUID of the pet whose followers are to be fetched.",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Pet not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Successfully retrieved followers",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PetResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/pets/my-pets": {
       "get": {
         "tags": [
@@ -2736,13 +2890,22 @@
           },
           "avatarUrl": {
             "type": "string",
-            "description": "The public URL for the pet's avatar image.",
-            "nullable": true
+            "description": "The public URL for the pet's avatar."
           },
           "ownerId": {
             "type": "string",
             "description": "The unique identifier of the pet's owner.",
             "format": "uuid"
+          },
+          "followerCount": {
+            "type": "integer",
+            "description": "The number of pets following this pet.",
+            "format": "int64"
+          },
+          "followingCount": {
+            "type": "integer",
+            "description": "The number of pets this pet is following.",
+            "format": "int64"
           }
         },
         "description": "Detailed information about a pet's profile."
