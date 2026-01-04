@@ -334,9 +334,6 @@
               }
             }
           },
-          "204":{
-            "description":"Password updated successfully"
-          },
           "400":{
             "description":"Incorrect old password or invalid new password",
             "content":{
@@ -346,6 +343,9 @@
                 }
               }
             }
+          },
+          "204":{
+            "description":"Password updated successfully"
           }
         },
         "security":[
@@ -1817,22 +1817,22 @@
               }
             }
           },
-          "401":{
-            "description":"Invalid credentials",
-            "content":{
-              "*/*":{
-                "schema":{
-                  "$ref":"#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
           "200":{
             "description":"Authentication successful",
             "content":{
               "*/*":{
                 "schema":{
                   "$ref":"#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "401":{
+            "description":"Invalid credentials",
+            "content":{
+              "*/*":{
+                "schema":{
+                  "$ref":"#/components/schemas/ErrorResponse"
                 }
               }
             }
@@ -3154,6 +3154,11 @@
             "description":"The pet's birth date.",
             "format":"date"
           },
+          "avatarUrl":{
+            "type":"string",
+            "description":"The public URL for the pet's avatar image.",
+            "nullable":true
+          },
           "ownerId":{
             "type":"string",
             "description":"The unique identifier of the pet's owner.",
@@ -3383,6 +3388,11 @@
           "breed":{
             "type":"string",
             "description":"The breed of the pet."
+          },
+          "avatarUrl":{
+            "type":"string",
+            "description":"The public URL for the pet's avatar image.",
+            "nullable":true
           }
         },
         "description":"A summarized pet profile for search results."

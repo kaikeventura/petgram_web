@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petgram_web/features/feed/presentation/providers/create_post_provider.dart';
+import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
 
 class CreatePostScreen extends ConsumerStatefulWidget {
   const CreatePostScreen({super.key});
@@ -20,7 +21,6 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
   @override
   void initState() {
     super.initState();
-    // Reseta o estado do provider ao entrar na tela
     Future.microtask(() => ref.read(createPostProvider.notifier).resetState());
   }
 
@@ -57,6 +57,7 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
 
     final createPostState = ref.watch(createPostProvider);
     final isLoading = createPostState.status == CreatePostStatus.loading;
+    final currentPet = ref.watch(petContextProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -85,6 +86,27 @@ class _CreatePostScreenState extends ConsumerState<CreatePostScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            if (currentPet != null)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: Row(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: currentPet.avatarUrl != null
+                          ? NetworkImage(currentPet.avatarUrl!)
+                          : null,
+                      child: currentPet.avatarUrl == null
+                          ? Text(currentPet.name[0].toUpperCase())
+                          : null,
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      currentPet.name,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
             if (_imageFile == null)
               GestureDetector(
                 onTap: _pickImage,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_notifier.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_state.dart';
 
@@ -20,10 +19,6 @@ class LoginScreen extends ConsumerWidget {
             backgroundColor: Colors.red,
           ),
         );
-      }
-      if (next.status == AuthStatus.authenticated) {
-        // Navega para o feed após o login bem-sucedido
-        context.go('/feed');
       }
     });
 
