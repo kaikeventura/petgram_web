@@ -20,54 +20,61 @@ class FriendshipRepository {
       return FriendshipState(FriendshipStatusValue.isMe);
     }
 
-    final response = await _dio.get('/friendships/status', queryParameters: {
-      'pet1': myPetId,
-      'pet2': targetPetId,
-    });
+    final response = await _dio.get(
+      '/friendships/status/$targetPetId',
+      options: Options(headers: {'X-Pet-Id': myPetId}),
+    );
 
-    final status = response.data['status'];
+    final status = response.data['status'] as String;
 
     switch (status) {
-      case 'ACCEPTED':
-        return FriendshipState(FriendshipStatusValue.accepted);
-      case 'BLOCKED':
-        return FriendshipState(FriendshipStatusValue.blocked);
-      case 'PENDING':
-        final pendingRequests = await getPendingRequests(myPetId: myPetId);
-        final didIReceive = pendingRequests.any((req) => req['requesterId'] == targetPetId);
-        if (didIReceive) {
-          return FriendshipState(FriendshipStatusValue.receivedRequest, pendingRequesterId: targetPetId);
-        } else {
-          return FriendshipState(FriendshipStatusValue.sentRequest);
-        }
+      case 'NONE':
+        return FriendshipState(FriendshipStatusValue.none);
+      case 'PENDING_SENT':
+        return FriendshipState(FriendshipStatusValue.pendingSent);
+      case 'PENDING_RECEIVED':
+        // O ID do requisitante é o `targetPetId` do perfil que estamos vendo.
+        // O botão usará essa informação diretamente do seu contexto.
+        return FriendshipState(FriendshipStatusValue.pendingReceived, pendingRequesterId: targetPetId);
+      case 'FOLLOWING':
+        return FriendshipState(FriendshipStatusValue.following);
+      case 'FOLLOWED_BY':
+        return FriendshipState(FriendshipStatusValue.followedBy);
+      case 'MUTUAL':
+        return FriendshipState(FriendshipStatusValue.mutual);
       default:
         return FriendshipState(FriendshipStatusValue.none);
     }
   }
 
   Future<List<dynamic>> getPendingRequests({required String myPetId}) async {
-    final response = await _dio.get('/friendships/requests/pending/$myPetId');
+    final response = await _dio.get(
+      '/friendships/requests/pending',
+      options: Options(headers: {'X-Pet-Id': myPetId}),
+    );
     return response.data as List<dynamic>;
   }
 
   Future<void> sendFriendRequest({required String myPetId, required String targetPetId}) async {
-    await _dio.post('/friendships/request', data: {
-      'requesterPetId': myPetId,
-      'addresseePetId': targetPetId,
-    });
+    await _dio.post(
+      '/friendships/request',
+      data: {'targetPetId': targetPetId},
+      options: Options(headers: {'X-Pet-Id': myPetId}),
+    );
   }
 
   Future<void> acceptFriendRequest({required String myPetId, required String requesterPetId}) async {
-    await _dio.post('/friendships/accept', data: {
-      'requesterPetId': requesterPetId,
-      'addresseePetId': myPetId,
-    });
+    await _dio.post(
+      '/friendships/accept',
+      data: {'requesterPetId': requesterPetId},
+      options: Options(headers: {'X-Pet-Id': myPetId}),
+    );
   }
 
-  Future<void> removeFriendship({required String myPetId, required String targetPetId}) async {
-    await _dio.post('/friendships/remove', data: {
-      'requesterPetId': myPetId,
-      'addresseePetId': targetPetId,
-    });
+  Future<void> unfollowPet({required String myPetId, required String targetPetId}) async {
+    await _dio.delete(
+      '/friendships/unfollow/$targetPetId',
+      options: Options(headers: {'X-Pet-Id': myPetId}),
+    );
   }
 }

@@ -21,44 +21,50 @@ class FriendshipActionButton extends ConsumerWidget {
         switch (state.status) {
           case FriendshipStatusValue.isMe:
             return OutlinedButton(onPressed: () {}, child: const Text('Editar Perfil'));
-          
+
           case FriendshipStatusValue.none:
             return ElevatedButton(
               onPressed: () async {
                 await ref.read(friendshipRepositoryProvider).sendFriendRequest(myPetId: myPetId!, targetPetId: targetPetId);
                 ref.invalidate(friendshipStatusProvider(targetPetId));
               },
-              child: const Text('Adicionar Amigo'),
+              child: const Text('Seguir'),
             );
 
-          case FriendshipStatusValue.sentRequest:
-            return OutlinedButton(onPressed: null, child: const Text('Solicitação Enviada'));
+          case FriendshipStatusValue.pendingSent:
+            return OutlinedButton(onPressed: null, child: const Text('Solicitado'));
 
-          case FriendshipStatusValue.receivedRequest:
-            return Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-                  onPressed: () async {
-                    await ref.read(friendshipRepositoryProvider).acceptFriendRequest(myPetId: myPetId!, requesterPetId: state.pendingRequesterId!);
-                    ref.invalidate(friendshipStatusProvider(targetPetId));
-                  },
-                  child: const Text('Aceitar'),
-                ),
-                const SizedBox(width: 8),
-                TextButton(onPressed: () {}, child: const Text('Recusar')),
-              ],
+          case FriendshipStatusValue.pendingReceived:
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              onPressed: () async {
+                // CORREÇÃO: O requisitante é o pet do perfil que estamos vendo (targetPetId)
+                await ref.read(friendshipRepositoryProvider).acceptFriendRequest(myPetId: myPetId!, requesterPetId: targetPetId);
+                ref.invalidate(friendshipStatusProvider(targetPetId));
+              },
+              child: const Text('Aceitar'),
             );
 
-          case FriendshipStatusValue.accepted:
+          case FriendshipStatusValue.following:
+          case FriendshipStatusValue.mutual:
             return OutlinedButton(
               onPressed: () {
-                // Lógica para mostrar modal de "Desfazer Amizade"
+                // Lógica para modal de "Deixar de Seguir"
               },
-              child: const Text('Amigos'),
+              child: const Text('A Seguir'),
             );
-            
+
+          case FriendshipStatusValue.followedBy:
+            return ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
+              onPressed: () async {
+                // A ação é a mesma de seguir: enviar uma solicitação
+                await ref.read(friendshipRepositoryProvider).sendFriendRequest(myPetId: myPetId!, targetPetId: targetPetId);
+                ref.invalidate(friendshipStatusProvider(targetPetId));
+              },
+              child: const Text('Seguir de Volta'),
+            );
+
           default:
             return const SizedBox.shrink();
         }

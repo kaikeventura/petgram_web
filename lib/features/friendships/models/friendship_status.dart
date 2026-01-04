@@ -1,9 +1,10 @@
 enum FriendshipStatusValue {
-  none, // Não há relação
-  sentRequest, // Eu enviei o pedido
-  receivedRequest, // Eu recebi o pedido
-  accepted, // Somos amigos
-  blocked, // Bloqueado
+  none, // Ninguém segue ninguém.
+  pendingSent, // Eu enviei, ele ainda não aceitou.
+  pendingReceived, // Ele enviou para mim, eu ainda não aceitei.
+  following, // Eu sigo ele (e ele não me segue).
+  followedBy, // Ele me segue, mas eu não o sigo.
+  mutual, // Ambos se seguem.
   isMe, // É o meu próprio perfil
 }
 
