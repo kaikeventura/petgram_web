@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petgram_web/features/comments/presentation/comments_sheet.dart';
 import 'package:petgram_web/features/feed/data/models/post_model.dart';
+import 'package:petgram_web/features/likes/presentation/likes_sheet.dart';
 import 'package:petgram_web/features/post/repositories/post_repository.dart';
 
 class PostCard extends ConsumerStatefulWidget {
@@ -161,9 +162,19 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  '$_likeCount curtidas',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                GestureDetector(
+                  onTap: () {
+                    if (_likeCount > 0) {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) => LikesSheet(postId: widget.post.id),
+                      );
+                    }
+                  },
+                  child: Text(
+                    '$_likeCount curtidas',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const SizedBox(height: 4),
                 RichText(
