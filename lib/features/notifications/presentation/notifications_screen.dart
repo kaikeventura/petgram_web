@@ -4,39 +4,48 @@ import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/notifications/models/notification_model.dart';
 import 'package:petgram_web/features/notifications/providers/notification_providers.dart';
 import 'package:petgram_web/features/notifications/repositories/notification_repository.dart';
+import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
 
 class NotificationsScreen extends ConsumerWidget {
   const NotificationsScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // O `notificationsProvider` agora depende do pet ativo e se reconstrói sozinho.
     final notificationsAsync = ref.watch(notificationsProvider);
+    final activePetId = ref.watch(petContextProvider.select((p) => p?.id));
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notificações'),
         actions: [
           TextButton(
-            onPressed: () async {
-              await ref.read(notificationRepositoryProvider).markAllAsRead();
-              ref.invalidate(notificationsProvider);
-            },
+            onPressed: activePetId == null
+                ? null // Desabilita o botão se não houver pet ativo
+                : () async {
+                    await ref.read(notificationRepositoryProvider).markAllAsRead(petId: activePetId);
+                    // Invalida o provider para forçar a atualização da UI
+                    ref.invalidate(notificationsProvider);
+                  },
             child: const Text('Marcar tudo como lido'),
           ),
         ],
       ),
       body: notificationsAsync.when(
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, s) => Center(child: Text('Erro: $e')),
+        error: (e, s) => Center(child: Text('Erro ao carregar notificações: $e')),
         data: (notifications) {
           if (notifications.isEmpty) {
             return const Center(child: Text('Nenhuma notificação por aqui.'));
           }
-          return ListView.builder(
-            itemCount: notifications.length,
-            itemBuilder: (context, index) {
-              return NotificationTile(notification: notifications[index]);
-            },
+          return RefreshIndicator(
+            onRefresh: () => ref.refresh(notificationsProvider.future),
+            child: ListView.builder(
+              itemCount: notifications.length,
+              itemBuilder: (context, index) {
+                return NotificationTile(notification: notifications[index]);
+              },
+            ),
           );
         },
       ),

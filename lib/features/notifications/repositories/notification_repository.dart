@@ -12,9 +12,12 @@ class NotificationRepository {
   final Dio _dio;
   NotificationRepository(this._dio);
 
-  Future<List<NotificationModel>> getNotifications() async {
+  Future<List<NotificationModel>> getNotifications({required String petId}) async {
     try {
-      final response = await _dio.get('/notifications');
+      final response = await _dio.get(
+        '/notifications',
+        options: Options(headers: {'X-Pet-Id': petId}),
+      );
       final List<dynamic> data = response.data;
       return data.map((json) => NotificationModel.fromMap(json)).toList();
     } catch (e) {
@@ -22,9 +25,12 @@ class NotificationRepository {
     }
   }
 
-  Future<void> markAllAsRead() async {
+  Future<void> markAllAsRead({required String petId}) async {
     try {
-      await _dio.post('/notifications/mark-as-read');
+      await _dio.post(
+        '/notifications/mark-as-read',
+        options: Options(headers: {'X-Pet-Id': petId}),
+      );
     } catch (e) {
       rethrow;
     }
