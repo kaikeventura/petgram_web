@@ -11,7 +11,7 @@ class NotificationsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // O `notificationsProvider` agora depende do pet ativo e se reconstrói sozinho.
+    // O `notificationsProvider` agora é um Stream que se atualiza sozinho.
     final notificationsAsync = ref.watch(notificationsProvider);
     final activePetId = ref.watch(petContextProvider.select((p) => p?.id));
 
@@ -21,10 +21,10 @@ class NotificationsScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: activePetId == null
-                ? null // Desabilita o botão se não houver pet ativo
+                ? null 
                 : () async {
                     await ref.read(notificationRepositoryProvider).markAllAsRead(petId: activePetId);
-                    // Invalida o provider para forçar a atualização da UI
+                    // Força uma atualização imediata
                     ref.invalidate(notificationsProvider);
                   },
             child: const Text('Marcar tudo como lido'),
@@ -39,7 +39,8 @@ class NotificationsScreen extends ConsumerWidget {
             return const Center(child: Text('Nenhuma notificação por aqui.'));
           }
           return RefreshIndicator(
-            onRefresh: () => ref.refresh(notificationsProvider.future),
+            // Para StreamProvider, invalidar força o reinício do stream e da busca inicial
+            onRefresh: () async => ref.invalidate(notificationsProvider),
             child: ListView.builder(
               itemCount: notifications.length,
               itemBuilder: (context, index) {
@@ -84,7 +85,8 @@ class NotificationTile extends StatelessWidget {
   Icon _getIconForType(NotificationType type) {
     switch (type) {
       case NotificationType.postLike:
-        return const Icon(Icons.pets, color: Colors.red);
+        // Atualizado para laranja para combinar com "patadas"
+        return const Icon(Icons.pets, color: Colors.orange);
       case NotificationType.postComment:
         return const Icon(Icons.comment, color: Colors.blue);
       case NotificationType.friendshipRequest:
