@@ -13,39 +13,37 @@ class FeedScreen extends ConsumerWidget {
     final feedAsyncValue = ref.watch(feedProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('PetGram'),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 600),
-          child: feedAsyncValue.when(
-            loading: () => ListView.builder(
-              itemCount: 3, // Mostra 3 esqueletos enquanto carrega
-              itemBuilder: (context, index) => const PostSkeleton(),
-            ),
-            error: (err, stack) => Center(
-              child: Text('Erro ao carregar o feed: $err'),
-            ),
-            data: (posts) {
-              if (posts.isEmpty) {
-                return const Center(
-                  child: Text('Nenhuma publicação encontrada.'),
+      body: SafeArea(
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: feedAsyncValue.when(
+              loading: () => ListView.builder(
+                itemCount: 3, // Mostra 3 esqueletos enquanto carrega
+                itemBuilder: (context, index) => const PostSkeleton(),
+              ),
+              error: (err, stack) => Center(
+                child: Text('Erro ao carregar o feed: $err'),
+              ),
+              data: (posts) {
+                if (posts.isEmpty) {
+                  return const Center(
+                    child: Text('Nenhuma publicação encontrada.'),
+                  );
+                }
+                // Usando RefreshIndicator para permitir "puxar para atualizar"
+                return RefreshIndicator(
+                  onRefresh: () => ref.refresh(feedProvider.future),
+                  child: ListView.builder(
+                    itemCount: posts.length,
+                    itemBuilder: (context, index) {
+                      final post = posts[index];
+                      return PostCard(post: post);
+                    },
+                  ),
                 );
-              }
-              // Usando RefreshIndicator para permitir "puxar para atualizar"
-              return RefreshIndicator(
-                onRefresh: () => ref.refresh(feedProvider.future),
-                child: ListView.builder(
-                  itemCount: posts.length,
-                  itemBuilder: (context, index) {
-                    final post = posts[index];
-                    return PostCard(post: post);
-                  },
-                ),
-              );
-            },
+              },
+            ),
           ),
         ),
       ),
