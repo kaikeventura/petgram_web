@@ -32,14 +32,26 @@ class _PostCardState extends ConsumerState<PostCard> with TickerProviderStateMix
     _isLiked = widget.post.isLiked;
     _likeCount = widget.post.likeCount;
 
-    // Animação do botão pequeno
+    // Animação do botão pequeno (Pop Elástico)
     _likeButtonController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 500), // Duração total do ciclo
     );
-    _likeButtonAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: _likeButtonController, curve: Curves.easeOut),
-    );
+
+    _likeButtonAnimation = TweenSequence<double>([
+      // Fase 1: Cresce rápido (Anticipation/Pop)
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.0, end: 1.35)
+            .chain(CurveTween(curve: Curves.easeOutQuad)),
+        weight: 30, // 30% do tempo
+      ),
+      // Fase 2: Volta ao normal com efeito elástico
+      TweenSequenceItem(
+        tween: Tween<double>(begin: 1.35, end: 1.0)
+            .chain(CurveTween(curve: Curves.elasticOut)),
+        weight: 70, // 70% do tempo
+      ),
+    ]).animate(_likeButtonController);
 
     // Animação da Pata Gigante (Double Tap)
     _bigPawController = AnimationController(
@@ -52,7 +64,6 @@ class _PostCardState extends ConsumerState<PostCard> with TickerProviderStateMix
 
     _bigPawController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        // Aguarda um pouco e depois some
         Future.delayed(const Duration(milliseconds: 100), () {
           if (mounted) {
             _bigPawController.reverse().then((_) {
@@ -83,8 +94,9 @@ class _PostCardState extends ConsumerState<PostCard> with TickerProviderStateMix
       _likeCount += _isLiked ? 1 : -1;
     });
 
+    // Se curtiu, dispara a animação de "Pop"
     if (_isLiked) {
-      _likeButtonController.forward().then((_) => _likeButtonController.reverse());
+      _likeButtonController.forward(from: 0.0);
     }
 
     try {
@@ -120,6 +132,9 @@ class _PostCardState extends ConsumerState<PostCard> with TickerProviderStateMix
 
     if (!_isLiked) {
       _onLikePressed();
+    } else {
+      // Se já estava curtido, anima o botão pequeno também para feedback visual
+      _likeButtonController.forward(from: 0.0);
     }
   }
 
