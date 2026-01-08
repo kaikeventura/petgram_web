@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/comments/presentation/comments_sheet.dart';
 import 'package:petgram_web/features/feed/data/models/post_model.dart';
 import 'package:petgram_web/features/likes/presentation/likes_sheet.dart';
@@ -95,14 +96,22 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
             padding: const EdgeInsets.all(12.0),
             child: Row(
               children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: widget.post.authorAvatarUrl != null
-                      ? NetworkImage(widget.post.authorAvatarUrl!)
-                      : null,
-                  child: widget.post.authorAvatarUrl == null
-                      ? const Icon(Icons.pets, color: Colors.white, size: 20)
-                      : null,
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () {
+                      context.push('/pets/${widget.post.authorId}');
+                    },
+                    child: CircleAvatar(
+                      radius: 20,
+                      backgroundImage: widget.post.authorAvatarUrl != null
+                          ? NetworkImage(widget.post.authorAvatarUrl!)
+                          : null,
+                      child: widget.post.authorAvatarUrl == null
+                          ? const Icon(Icons.pets, color: Colors.white, size: 20)
+                          : null,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 12),
                 Text(
