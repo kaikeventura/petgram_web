@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:petgram_web/core/network/dio_provider.dart';
+import 'package:petgram_web/features/feed/data/models/post_model.dart';
 import 'package:petgram_web/features/pet/models/post_profile_model.dart';
 
 final postRepositoryProvider = Provider<PostRepository>((ref) {
@@ -18,6 +19,15 @@ class PostRepository {
       final response = await _dio.get('/pets/$petId/posts');
       final List<dynamic> data = response.data['content'];
       return data.map((json) => PostProfileModel.fromJson(json)).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Post> getPostById(String postId) async {
+    try {
+      final response = await _dio.get('/posts/$postId');
+      return Post.fromMap(response.data);
     } catch (e) {
       rethrow;
     }

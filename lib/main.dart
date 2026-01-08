@@ -15,6 +15,7 @@ import 'package:petgram_web/features/pet/presentation/pet_profile_screen.dart';
 import 'package:petgram_web/features/pet/presentation/pet_selection_screen.dart';
 import 'package:petgram_web/features/pet/presentation/public_pet_profile_screen.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
+import 'package:petgram_web/features/post/presentation/post_detail_screen.dart';
 import 'package:petgram_web/features/search/presentation/search_screen.dart';
 
 class RouterNotifier extends ChangeNotifier {
@@ -92,6 +93,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final petId = state.pathParameters['petId']!;
           return PublicPetProfileScreen(petId: petId);
+        },
+      ),
+      GoRoute(
+        path: '/posts/:postId',
+        builder: (context, state) {
+          final postId = state.pathParameters['postId']!;
+          return PostDetailScreen(postId: postId);
         },
       ),
       GoRoute(
