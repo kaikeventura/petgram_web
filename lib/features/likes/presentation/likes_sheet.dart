@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/likes/providers/likes_provider.dart';
 
 class LikesSheet extends ConsumerWidget {
@@ -34,13 +35,22 @@ class LikesSheet extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final pet = likers[index];
                   return ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: pet.avatarUrl != null
-                          ? NetworkImage(pet.avatarUrl!)
-                          : null,
-                      child: pet.avatarUrl == null
-                          ? Text(pet.name[0].toUpperCase())
-                          : null,
+                    leading: MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                          context.push('/pets/${pet.id}');
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: pet.avatarUrl != null
+                              ? NetworkImage(pet.avatarUrl!)
+                              : null,
+                          child: pet.avatarUrl == null
+                              ? Text(pet.name[0].toUpperCase())
+                              : null,
+                        ),
+                      ),
                     ),
                     title: Text(pet.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                   );

@@ -135,7 +135,7 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         StatItem(count: widget.postsCount?.toString() ?? '-', label: 'Posts'),
-                        StatItem(count: widget.pet.followerCount.toString(), label: 'Amigos'),
+                        StatItem(count: widget.pet.followerCount.toString(), label: 'Seguidores'),
                         StatItem(count: widget.pet.followingCount.toString(), label: 'Seguindo'),
                       ],
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/comments/providers/comments_provider.dart';
 import 'package:petgram_web/features/comments/repositories/comment_repository.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
@@ -95,13 +96,22 @@ class _CommentsSheetState extends ConsumerState<CommentsSheet> {
                     final isOwner = comment.author.id == currentPetId;
 
                     return ListTile(
-                      leading: CircleAvatar(
-                        backgroundImage: comment.author.avatarUrl != null
-                            ? NetworkImage(comment.author.avatarUrl!)
-                            : null,
-                        child: comment.author.avatarUrl == null
-                            ? Text(comment.author.name[0].toUpperCase())
-                            : null,
+                      leading: MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                            context.push('/pets/${comment.author.id}');
+                          },
+                          child: CircleAvatar(
+                            backgroundImage: comment.author.avatarUrl != null
+                                ? NetworkImage(comment.author.avatarUrl!)
+                                : null,
+                            child: comment.author.avatarUrl == null
+                                ? Text(comment.author.name[0].toUpperCase())
+                                : null,
+                          ),
+                        ),
                       ),
                       title: Text(comment.author.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                       subtitle: Text(comment.text),
