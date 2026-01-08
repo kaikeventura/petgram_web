@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:petgram_web/core/presentation/widgets/skeleton_widgets.dart';
 import 'package:petgram_web/features/feed/presentation/providers/feed_provider.dart';
 import 'package:petgram_web/features/feed/presentation/widgets/post_card.dart';
 
@@ -20,7 +21,10 @@ class FeedScreen extends ConsumerWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 600),
           child: feedAsyncValue.when(
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => ListView.builder(
+              itemCount: 3, // Mostra 3 esqueletos enquanto carrega
+              itemBuilder: (context, index) => const PostSkeleton(),
+            ),
             error: (err, stack) => Center(
               child: Text('Erro ao carregar o feed: $err'),
             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:petgram_web/core/presentation/widgets/skeleton_widgets.dart';
 import 'package:petgram_web/features/friendships/presentation/friendship_action_button.dart';
 import 'package:petgram_web/features/pet/presentation/widgets/profile_widgets.dart';
 import 'package:petgram_web/features/pet/providers/profile_providers.dart';
@@ -37,13 +38,13 @@ class PublicPetProfileScreen extends ConsumerWidget {
                     actionButton: FriendshipActionButton(targetPetId: pet.id),
                   );
                 },
-                loading: () => const Center(heightFactor: 5, child: CircularProgressIndicator()),
+                loading: () => const ProfileHeaderSkeleton(),
                 error: (e, st) => Center(child: Text('Erro ao carregar perfil: $e')),
               ),
             ),
             petPosts.when(
               data: (posts) => PostsGrid(posts: posts),
-              loading: () => const SliverToBoxAdapter(child: Center(heightFactor: 5, child: CircularProgressIndicator())),
+              loading: () => const SliverToBoxAdapter(child: GridSkeleton()),
               error: (e, st) => SliverToBoxAdapter(child: Center(child: Text('Erro ao carregar posts: $e'))),
             ),
           ],
