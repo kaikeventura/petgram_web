@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:petgram_web/features/pet/models/pet_model.dart';
 import 'package:petgram_web/features/pet/models/post_profile_model.dart';
+import 'package:petgram_web/features/pet/presentation/widgets/pet_list_sheet.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
 import 'package:petgram_web/features/pet/providers/profile_providers.dart';
 import 'package:petgram_web/features/pet/repositories/pet_repository.dart';
@@ -83,6 +84,17 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
     );
   }
 
+  void _showPetList(BuildContext context, PetListType type) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => FractionallySizedBox(
+        heightFactor: 0.7,
+        child: PetListSheet(petId: widget.pet.id, type: type),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isMyProfile = ref.watch(petContextProvider.select((p) => p?.id)) == widget.pet.id;
@@ -135,8 +147,16 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         StatItem(count: widget.postsCount?.toString() ?? '-', label: 'Posts'),
-                        StatItem(count: widget.pet.followerCount.toString(), label: 'Seguidores'),
-                        StatItem(count: widget.pet.followingCount.toString(), label: 'Seguindo'),
+                        StatItem(
+                          count: widget.pet.followerCount.toString(),
+                          label: 'Seguidores',
+                          onTap: () => _showPetList(context, PetListType.followers),
+                        ),
+                        StatItem(
+                          count: widget.pet.followingCount.toString(),
+                          label: 'Seguindo',
+                          onTap: () => _showPetList(context, PetListType.following),
+                        ),
                       ],
                     ),
                   ),
@@ -160,15 +180,28 @@ class _ProfileHeaderState extends ConsumerState<ProfileHeader> {
 class StatItem extends StatelessWidget {
   final String count;
   final String label;
-  const StatItem({super.key, required this.count, required this.label});
+  final VoidCallback? onTap;
+
+  const StatItem({
+    super.key,
+    required this.count,
+    required this.label,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(count, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-        Text(label, style: const TextStyle(color: Colors.grey)),
-      ],
+    return MouseRegion(
+      cursor: onTap != null ? SystemMouseCursors.click : SystemMouseCursors.basic,
+      child: GestureDetector(
+        onTap: onTap,
+        child: Column(
+          children: [
+            Text(count, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
+            Text(label, style: const TextStyle(color: Colors.grey)),
+          ],
+        ),
+      ),
     );
   }
 }

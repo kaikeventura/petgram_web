@@ -80,4 +80,24 @@ class PetRepository {
       rethrow;
     }
   }
+
+  Future<List<PetModel>> getFollowers(String petId) async {
+    try {
+      final response = await _dio.get('/pets/$petId/followers');
+      final List<dynamic> data = response.data;
+      return data.map((json) => PetModel.fromJson(json)).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<List<PetModel>> getFollowing(String petId) async {
+    try {
+      final response = await _dio.get('/pets/$petId/following');
+      final List<dynamic> data = response.data;
+      return data.map((json) => PetModel.fromJson(json)).toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
 }
