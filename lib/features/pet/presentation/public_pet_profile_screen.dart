@@ -5,14 +5,21 @@ import 'package:petgram_web/features/friendships/presentation/friendship_action_
 import 'package:petgram_web/features/pet/presentation/widgets/profile_widgets.dart';
 import 'package:petgram_web/features/pet/providers/profile_providers.dart';
 
-class PublicPetProfileScreen extends ConsumerWidget {
+class PublicPetProfileScreen extends ConsumerStatefulWidget {
   final String petId;
   const PublicPetProfileScreen({super.key, required this.petId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final petDetails = ref.watch(petProfileProvider(petId));
-    final petPosts = ref.watch(petPostsProvider(petId));
+  ConsumerState<PublicPetProfileScreen> createState() => _PublicPetProfileScreenState();
+}
+
+class _PublicPetProfileScreenState extends ConsumerState<PublicPetProfileScreen> {
+  bool _isGridView = true;
+
+  @override
+  Widget build(BuildContext context) {
+    final petDetails = ref.watch(petProfileProvider(widget.petId));
+    final petPosts = ref.watch(petPostsProvider(widget.petId));
 
     return Scaffold(
       appBar: AppBar(
@@ -24,8 +31,8 @@ class PublicPetProfileScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
-          ref.invalidate(petProfileProvider(petId));
-          ref.invalidate(petPostsProvider(petId));
+          ref.invalidate(petProfileProvider(widget.petId));
+          ref.invalidate(petPostsProvider(widget.petId));
         },
         child: CustomScrollView(
           slivers: [
@@ -42,8 +49,28 @@ class PublicPetProfileScreen extends ConsumerWidget {
                 error: (e, st) => Center(child: Text('Erro ao carregar perfil: $e')),
               ),
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.grid_on, color: _isGridView ? Colors.blue : Colors.grey),
+                      onPressed: () => setState(() => _isGridView = true),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.list, color: !_isGridView ? Colors.blue : Colors.grey),
+                      onPressed: () => setState(() => _isGridView = false),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             petPosts.when(
-              data: (posts) => PostsGrid(posts: posts),
+              data: (posts) => _isGridView 
+                  ? PostsGrid(posts: posts) 
+                  : PostsList(posts: posts),
               loading: () => const SliverToBoxAdapter(child: GridSkeleton()),
               error: (e, st) => SliverToBoxAdapter(child: Center(child: Text('Erro ao carregar posts: $e'))),
             ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:petgram_web/features/feed/data/models/post_model.dart';
+import 'package:petgram_web/features/feed/presentation/widgets/post_card.dart';
 import 'package:petgram_web/features/pet/models/pet_model.dart';
-import 'package:petgram_web/features/pet/models/post_profile_model.dart';
 import 'package:petgram_web/features/pet/presentation/widgets/pet_list_sheet.dart';
 import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
 import 'package:petgram_web/features/pet/providers/profile_providers.dart';
@@ -207,7 +209,7 @@ class StatItem extends StatelessWidget {
 }
 
 class PostsGrid extends StatelessWidget {
-  final List<PostProfileModel> posts;
+  final List<Post> posts;
   const PostsGrid({super.key, required this.posts});
 
   @override
@@ -234,9 +236,7 @@ class PostsGrid extends StatelessWidget {
             final post = posts[index];
             return GestureDetector(
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Clicou no post ${post.id}')),
-                );
+                context.push('/posts/${post.id}');
               },
               child: Image.network(
                 post.photoUrl,
@@ -249,6 +249,37 @@ class PostsGrid extends StatelessWidget {
           },
           childCount: posts.length,
         ),
+      ),
+    );
+  }
+}
+
+class PostsList extends StatelessWidget {
+  final List<Post> posts;
+  const PostsList({super.key, required this.posts});
+
+  @override
+  Widget build(BuildContext context) {
+    if (posts.isEmpty) {
+      return const SliverToBoxAdapter(
+        child: Center(
+          heightFactor: 5,
+          child: Text('Nenhuma publicação ainda.'),
+        ),
+      );
+    }
+    return SliverList(
+      delegate: SliverChildBuilderDelegate(
+        (BuildContext context, int index) {
+          final post = posts[index];
+          return Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 600),
+              child: PostCard(post: post),
+            ),
+          );
+        },
+        childCount: posts.length,
       ),
     );
   }

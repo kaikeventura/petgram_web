@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:petgram_web/core/presentation/widgets/skeleton_widgets.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_notifier.dart';
 import 'package:petgram_web/features/friendships/presentation/friendship_action_button.dart';
 import 'package:petgram_web/features/pet/presentation/widgets/profile_widgets.dart';
@@ -8,11 +9,18 @@ import 'package:petgram_web/features/pet/providers/pet_context_provider.dart';
 import 'package:petgram_web/features/pet/providers/pet_list_provider.dart';
 import 'package:petgram_web/features/pet/providers/profile_providers.dart';
 
-class PetProfileScreen extends ConsumerWidget {
+class PetProfileScreen extends ConsumerStatefulWidget {
   const PetProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PetProfileScreen> createState() => _PetProfileScreenState();
+}
+
+class _PetProfileScreenState extends ConsumerState<PetProfileScreen> {
+  bool _isGridView = true;
+
+  @override
+  Widget build(BuildContext context) {
     final currentPet = ref.watch(petContextProvider);
 
     if (currentPet == null) {
@@ -72,13 +80,33 @@ class PetProfileScreen extends ConsumerWidget {
                   postsCount: petPosts.asData?.value.length,
                   actionButton: FriendshipActionButton(targetPetId: pet.id),
                 ),
-                loading: () => const Center(heightFactor: 5, child: CircularProgressIndicator()),
+                loading: () => const ProfileHeaderSkeleton(),
                 error: (e, st) => Center(child: Text('Erro ao carregar perfil: $e')),
               ),
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    IconButton(
+                      icon: Icon(Icons.grid_on, color: _isGridView ? Colors.blue : Colors.grey),
+                      onPressed: () => setState(() => _isGridView = true),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.list, color: !_isGridView ? Colors.blue : Colors.grey),
+                      onPressed: () => setState(() => _isGridView = false),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             petPosts.when(
-              data: (posts) => PostsGrid(posts: posts),
-              loading: () => const SliverToBoxAdapter(child: Center(heightFactor: 5, child: CircularProgressIndicator())),
+              data: (posts) => _isGridView 
+                  ? PostsGrid(posts: posts) 
+                  : PostsList(posts: posts),
+              loading: () => const SliverToBoxAdapter(child: GridSkeleton()),
               error: (e, st) => SliverToBoxAdapter(child: Center(child: Text('Erro ao carregar posts: $e'))),
             ),
           ],
