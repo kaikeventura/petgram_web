@@ -14,13 +14,17 @@ class PostCard extends ConsumerStatefulWidget {
   ConsumerState<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderStateMixin {
+class _PostCardState extends ConsumerState<PostCard> with TickerProviderStateMixin {
   late bool _isLiked;
   late int _likeCount;
   bool _isLikeActionInProgress = false;
 
-  late AnimationController _animationController;
-  late Animation<double> _scaleAnimation;
+  late AnimationController _likeButtonController;
+  late Animation<double> _likeButtonAnimation;
+
+  late AnimationController _bigPawController;
+  late Animation<double> _bigPawAnimation;
+  bool _showBigPaw = false;
 
   @override
   void initState() {
@@ -28,18 +32,42 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
     _isLiked = widget.post.isLiked;
     _likeCount = widget.post.likeCount;
 
-    _animationController = AnimationController(
+    // Animação do botão pequeno
+    _likeButtonController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 150),
     );
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeOut),
+    _likeButtonAnimation = Tween<double>(begin: 1.0, end: 1.2).animate(
+      CurvedAnimation(parent: _likeButtonController, curve: Curves.easeOut),
     );
+
+    // Animação da Pata Gigante (Double Tap)
+    _bigPawController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 400),
+    );
+    _bigPawAnimation = Tween<double>(begin: 0.0, end: 1.2).animate(
+      CurvedAnimation(parent: _bigPawController, curve: Curves.elasticOut),
+    );
+
+    _bigPawController.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        // Aguarda um pouco e depois some
+        Future.delayed(const Duration(milliseconds: 100), () {
+          if (mounted) {
+            _bigPawController.reverse().then((_) {
+              setState(() => _showBigPaw = false);
+            });
+          }
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    _likeButtonController.dispose();
+    _bigPawController.dispose();
     super.dispose();
   }
 
@@ -56,7 +84,7 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
     });
 
     if (_isLiked) {
-      _animationController.forward().then((_) => _animationController.reverse());
+      _likeButtonController.forward().then((_) => _likeButtonController.reverse());
     }
 
     try {
@@ -83,6 +111,15 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
           _isLikeActionInProgress = false;
         });
       }
+    }
+  }
+
+  void _onDoubleTapLike() {
+    setState(() => _showBigPaw = true);
+    _bigPawController.forward(from: 0.0);
+
+    if (!_isLiked) {
+      _onLikePressed();
     }
   }
 
@@ -121,26 +158,50 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
               ],
             ),
           ),
-          Image.network(
-            widget.post.photoUrl,
-            fit: BoxFit.cover,
-            width: double.infinity,
-            height: 400,
-            loadingBuilder: (context, child, loadingProgress) {
-              if (loadingProgress == null) return child;
-              return Container(
-                height: 400,
-                color: Colors.grey[300],
-                child: const Center(child: CircularProgressIndicator()),
-              );
-            },
+          GestureDetector(
+            onDoubleTap: _onDoubleTapLike,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Image.network(
+                  widget.post.photoUrl,
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 400,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      height: 400,
+                      color: Colors.grey[300],
+                      child: const Center(child: CircularProgressIndicator()),
+                    );
+                  },
+                ),
+                if (_showBigPaw)
+                  ScaleTransition(
+                    scale: _bigPawAnimation,
+                    child: const Icon(
+                      Icons.pets,
+                      color: Colors.white,
+                      size: 120,
+                      shadows: [
+                        Shadow(
+                          blurRadius: 10.0,
+                          color: Colors.black26,
+                          offset: Offset(0, 5),
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
             child: Row(
               children: [
                 ScaleTransition(
-                  scale: _scaleAnimation,
+                  scale: _likeButtonAnimation,
                   child: IconButton(
                     icon: Icon(
                       Icons.pets,
