@@ -16,7 +16,7 @@ class LikesSheet extends ConsumerWidget {
         Padding(
           padding: const EdgeInsets.all(16.0),
           child: Text(
-            'Curtidas',
+            'Patadas',
             style: Theme.of(context).textTheme.titleLarge,
           ),
         ),

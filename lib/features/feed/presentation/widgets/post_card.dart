@@ -73,7 +73,7 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
       });
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Erro ao ${originalIsLiked ? "descurtir" : "curtir"} a publicação')),
+          SnackBar(content: Text('Erro ao ${originalIsLiked ? "retirar patada" : "dar patada"} na publicação')),
         );
       }
     } finally {
@@ -135,7 +135,7 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
                   child: IconButton(
                     icon: Icon(
                       Icons.pets,
-                      color: _isLiked ? Colors.red : Colors.grey,
+                      color: _isLiked ? Colors.orange : Colors.grey,
                     ),
                     onPressed: _onLikePressed,
                   ),
@@ -172,7 +172,7 @@ class _PostCardState extends ConsumerState<PostCard> with SingleTickerProviderSt
                     }
                   },
                   child: Text(
-                    '$_likeCount curtidas',
+                    '$_likeCount patadas',
                     style: const TextStyle(fontWeight: FontWeight.bold),
                   ),
                 ),
