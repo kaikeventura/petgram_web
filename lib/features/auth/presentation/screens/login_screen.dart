@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_notifier.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_state.dart';
 
@@ -33,6 +34,8 @@ class LoginScreen extends ConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const Icon(Icons.pets, size: 64, color: Colors.blue),
+                const SizedBox(height: 16),
                 const Text(
                   'PetGram',
                   style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
@@ -43,6 +46,7 @@ class LoginScreen extends ConsumerWidget {
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.email),
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -52,6 +56,7 @@ class LoginScreen extends ConsumerWidget {
                   decoration: const InputDecoration(
                     labelText: 'Senha',
                     border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock),
                   ),
                   obscureText: true,
                 ),
@@ -59,16 +64,25 @@ class LoginScreen extends ConsumerWidget {
                 if (authState.status == AuthStatus.loading)
                   const CircularProgressIndicator()
                 else
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50),
-                    ),
-                    onPressed: () {
-                      ref
-                          .read(authNotifierProvider.notifier)
-                          .login(emailController.text, passwordController.text);
-                    },
-                    child: const Text('Entrar'),
+                  Column(
+                    children: [
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
+                        onPressed: () {
+                          ref
+                              .read(authNotifierProvider.notifier)
+                              .login(emailController.text, passwordController.text);
+                        },
+                        child: const Text('Entrar'),
+                      ),
+                      const SizedBox(height: 20),
+                      TextButton(
+                        onPressed: () => context.go('/register'),
+                        child: const Text('Não tem conta? Crie uma agora'),
+                      ),
+                    ],
                   ),
               ],
             ),

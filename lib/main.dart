@@ -5,6 +5,7 @@ import 'package:petgram_web/features/account/presentation/account_settings_scree
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_notifier.dart';
 import 'package:petgram_web/features/auth/presentation/notifiers/auth_state.dart';
 import 'package:petgram_web/features/auth/presentation/screens/login_screen.dart';
+import 'package:petgram_web/features/auth/presentation/screens/register_screen.dart';
 import 'package:petgram_web/features/auth/presentation/screens/splash_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/create_post_screen.dart';
 import 'package:petgram_web/features/feed/presentation/screens/feed_screen.dart';
@@ -48,16 +49,19 @@ final routerProvider = Provider<GoRouter>((ref) {
       
       final isGoingToSplash = state.uri.toString() == '/';
       final isGoingToLogin = state.uri.toString() == '/login';
+      final isGoingToRegister = state.uri.toString() == '/register';
 
       if (isAuthLoading) {
         return isGoingToSplash ? null : '/';
       }
 
       if (!isLoggedIn) {
-        return isGoingToLogin ? null : '/login';
+        // Permite acesso ao login e registro
+        if (isGoingToLogin || isGoingToRegister) return null;
+        return '/login';
       }
 
-      if (isLoggedIn && (isGoingToLogin || isGoingToSplash)) {
+      if (isLoggedIn && (isGoingToLogin || isGoingToSplash || isGoingToRegister)) {
         return currentPet == null ? '/select-pet' : '/feed';
       }
       
@@ -79,6 +83,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/login',
         builder: (context, state) => const LoginScreen(),
+      ),
+      GoRoute(
+        path: '/register',
+        builder: (context, state) => const RegisterScreen(),
       ),
       GoRoute(
         path: '/select-pet',

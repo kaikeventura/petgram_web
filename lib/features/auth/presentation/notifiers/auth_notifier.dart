@@ -40,11 +40,32 @@ class AuthNotifier extends StateNotifier<AuthState> {
       await authRepo.saveToken(authResponse.token);
 
       state = state.copyWith(status: AuthStatus.authenticated);
-      print('Logado!');
     } catch (e) {
       state = state.copyWith(
         status: AuthStatus.error,
         errorMessage: 'Falha no login. Verifique suas credenciais.',
+      );
+    }
+  }
+
+  Future<void> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      state = state.copyWith(status: AuthStatus.loading);
+      final authRepo = _ref.read(authRepositoryProvider);
+
+      // 1. Cria a conta
+      await authRepo.register(name: name, email: email, password: password);
+
+      // 2. Faz o login automático
+      await login(email, password);
+    } catch (e) {
+      state = state.copyWith(
+        status: AuthStatus.error,
+        errorMessage: 'Falha ao criar conta. Tente novamente.',
       );
     }
   }

@@ -23,6 +23,22 @@ class AuthRepository {
     return AuthResponse.fromMap(response.data);
   }
 
+  Future<void> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    final dio = _ref.read(dioProvider);
+    await dio.post(
+      '/auth/register',
+      data: {
+        'name': name,
+        'email': email,
+        'password': password,
+      },
+    );
+  }
+
   Future<void> saveToken(String token) async {
     final storage = _ref.read(secureStorageProvider);
     await storage.write(key: 'auth_token', value: token);
